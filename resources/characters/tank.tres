@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_char"]
+
+[resource]
+script = ExtResource("1_char")
+id = "tank"
+display_name = "重装"
+description = "生存专精，高血量高护甲"
+unlock_condition = "单局存活 10 波"
+base_stats = {"armor": 3, "attack_speed": 0, "crit_chance": 3, "damage_pct": -25, "dodge": 0, "elemental_damage": 0, "engineering": 0, "harvesting": 0, "hp_regen": 0, "life_steal": 0, "luck": 0, "max_hp": 18, "melee_damage": 0, "range": 0, "ranged_damage": 0, "speed": -25}
+starting_weapon = "stick"
+max_hp_modifier = 1.5
+special_rule = "hp_bonus"

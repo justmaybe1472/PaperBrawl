@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "combat_boots"
+display_name = "战斗靴"
+rarity = "rare"
+base_price = 55
+max_stack = 1
+stat_modifiers = {"speed": 15, "dodge": 5}
+tags = []
+description = "+15% 移动速度，+5% 闪避率"

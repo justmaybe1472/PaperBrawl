@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_char"]
+
+[resource]
+script = ExtResource("1_char")
+id = "speedy"
+display_name = "疾风"
+description = "极速移动，但生命值较低"
+unlock_condition = "单局存活 5 波"
+base_stats = {"armor": 0, "attack_speed": 0, "crit_chance": 3, "damage_pct": 0, "dodge": 5, "elemental_damage": 0, "engineering": 0, "harvesting": 0, "hp_regen": 0, "life_steal": 0, "luck": 0, "max_hp": 9, "melee_damage": 0, "range": 0, "ranged_damage": 0, "speed": 50}
+starting_weapon = "stick"
+max_hp_modifier = 0.75
+special_rule = "speed_bonus"

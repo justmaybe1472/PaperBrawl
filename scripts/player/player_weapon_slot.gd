@@ -100,13 +100,23 @@ func _get_tiered_weapon_data(weapon_id: String, tier: int) -> WeaponData:
 	cloned.base_damage = base.base_damage * tier_multipliers.get(tier, 1.0)
 	return cloned
 
+const WEAPON_SCENES: Dictionary = {
+	"melee": "res://scenes/entities/weapon_melee.tscn",
+	"ranged": "res://scenes/entities/weapon_ranged.tscn",
+	"elemental": "res://scenes/entities/weapon_elemental.tscn",
+	"engineering": "res://scenes/entities/weapon_engineering.tscn",
+	"primitive": "res://scenes/entities/weapon_melee.tscn",
+}
+
+func _get_weapon_scene(weapon_class: String) -> String:
+	return WEAPON_SCENES.get(weapon_class, "res://scenes/entities/weapon_melee.tscn")
+
 func _instantiate_weapon(slot_index: int, weapon_id: String, weapon_data: WeaponData):
-	var weapon_scene = load("res://scenes/entities/weapon_melee.tscn")
+	var scene_path = _get_weapon_scene(weapon_data.weapon_class)
+	var weapon_scene = load(scene_path)
 	var weapon = weapon_scene.instantiate()
 	weapon.weapon_id = weapon_id
 	weapon.player_stats = player_stats
-	if weapon.has_method("set_weapon_data"):
-		weapon.set_weapon_data(weapon_data)
 	weapon_container.add_child(weapon)
 
 	while slots.size() <= slot_index:

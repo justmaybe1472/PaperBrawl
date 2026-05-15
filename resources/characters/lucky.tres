@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_char"]
+
+[resource]
+script = ExtResource("1_char")
+id = "lucky"
+display_name = "幸运儿"
+description = "高幸运带来更好的商店和暴击"
+unlock_condition = "累计获得 200 材料"
+base_stats = {"armor": 0, "attack_speed": 0, "crit_chance": 3, "damage_pct": -10, "dodge": 0, "elemental_damage": 0, "engineering": 0, "harvesting": 0, "hp_regen": 0, "life_steal": 0, "luck": 50, "max_hp": 12, "melee_damage": 0, "range": 0, "ranged_damage": 0, "speed": 0}
+starting_weapon = "stick"
+max_hp_modifier = 1.0
+special_rule = "luck_bonus"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_wpn"]
+
+[resource]
+script = ExtResource("1_wpn")
+id = "mace"
+display_name = "钉头锤"
+weapon_class = "melee"
+tier = 1
+base_damage = 12.0
+cooldown = 1.8
+range = 140.0
+crit_multiplier = 2.0
+pierce = 1
+bounce = 0
+projectiles = 1
+knockback = 150.0
+lifesteal_multiplier = 0.8
+tags = []

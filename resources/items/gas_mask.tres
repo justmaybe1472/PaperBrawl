@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "gas_mask"
+display_name = "防毒面具"
+rarity = "uncommon"
+base_price = 30
+max_stack = 2
+stat_modifiers = {"elemental_damage": 2, "armor": 1}
+tags = []
+description = "+2 元素伤害，+1 护甲"

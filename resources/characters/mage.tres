@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_char"]
+
+[resource]
+script = ExtResource("1_char")
+id = "mage"
+display_name = "法师"
+description = "元素专精，元素伤害大幅提升"
+unlock_condition = "累计击杀 100 个敌人"
+base_stats = {"armor": 0, "attack_speed": 0, "crit_chance": 3, "damage_pct": 0, "dodge": 0, "elemental_damage": 75, "engineering": -50, "harvesting": 0, "hp_regen": 0, "life_steal": 0, "luck": 0, "max_hp": 10, "melee_damage": -50, "range": 0, "ranged_damage": 0, "speed": 0}
+starting_weapon = "fireball"
+max_hp_modifier = 0.85
+special_rule = "elemental_damage_bonus"

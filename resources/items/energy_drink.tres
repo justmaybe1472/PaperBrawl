@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "energy_drink"
+display_name = "能量饮料"
+rarity = "common"
+base_price = 22
+max_stack = 3
+stat_modifiers = {"attack_speed": 8, "speed": 3}
+tags = []
+description = "+8% 攻击速度，+3% 移动速度"

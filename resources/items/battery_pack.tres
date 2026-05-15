@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "battery_pack"
+display_name = "电池组"
+rarity = "uncommon"
+base_price = 32
+max_stack = 3
+stat_modifiers = {"engineering": 3, "range": 10}
+tags = []
+description = "+3 工程学，+10% 范围"

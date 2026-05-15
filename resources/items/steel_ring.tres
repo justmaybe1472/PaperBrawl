@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "steel_ring"
+display_name = "钢戒"
+rarity = "uncommon"
+base_price = 30
+max_stack = 0
+stat_modifiers = {"melee_damage": 2, "armor": 1}
+tags = []
+description = "+2 近战伤害，+1 护甲"

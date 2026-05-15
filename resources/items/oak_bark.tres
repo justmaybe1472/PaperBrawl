@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "oak_bark"
+display_name = "橡树皮"
+rarity = "common"
+base_price = 18
+max_stack = 4
+stat_modifiers = {"armor": 1, "max_hp": 2}
+tags = []
+description = "+1 护甲，+2 最大生命值"

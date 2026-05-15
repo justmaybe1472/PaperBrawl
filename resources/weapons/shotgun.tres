@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_wpn"]
+
+[resource]
+script = ExtResource("1_wpn")
+id = "shotgun"
+display_name = "霰弹枪"
+weapon_class = "ranged"
+tier = 1
+base_damage = 4.0
+cooldown = 1.5
+range = 300.0
+crit_multiplier = 2.0
+pierce = 0
+bounce = 0
+projectiles = 5
+knockback = 80.0
+lifesteal_multiplier = 1.0
+tags = []
