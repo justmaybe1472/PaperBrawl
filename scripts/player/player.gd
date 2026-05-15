@@ -36,6 +36,7 @@ func _physics_process(_delta):
 	if GameManager.current_state != GameManager.GameState.WAVE_ACTIVE:
 		return
 	_handle_movement()
+	_check_enemy_contact()
 
 func _handle_movement():
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -43,14 +44,15 @@ func _handle_movement():
 	velocity = input_dir * move_speed * speed_mult
 	move_and_slide()
 
-	for i in get_slide_collision_count():
-		var collider = get_slide_collision(i).get_collider()
-		if collider is EnemyBase and not is_invincible:
-			_take_collision_damage(collider)
-
-func _take_collision_damage(enemy: EnemyBase):
-	var damage = int(enemy.stats.get_stat("base_damage"))
-	_apply_damage(damage)
+func _check_enemy_contact():
+	if is_invincible:
+		return
+	var overlapping = hurtbox.get_overlapping_bodies()
+	for body in overlapping:
+		if body is EnemyBase:
+			var damage = int(body.stats.get_stat("base_damage"))
+			_apply_damage(damage)
+			break
 
 func _apply_damage(amount: int):
 	if is_invincible:
