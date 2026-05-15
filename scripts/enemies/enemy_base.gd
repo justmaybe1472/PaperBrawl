@@ -107,6 +107,14 @@ func _spawn_drops():
 	if wave_config:
 		multiplier = wave_config.material_multiplier
 
+	multiplier *= GameManager.get_wave_material_multiplier()
+
+	var player = get_tree().get_first_node_in_group("player")
+	var harvesting: float = 0.0
+	if player and player.has_node("StatsComponent"):
+		harvesting = player.get_node("StatsComponent").get_stat("harvesting")
+	multiplier *= (1.0 + harvesting / 50.0)
+
 	var amount: int = _material_drop + randi() % 3
 	if _is_elite:
 		amount *= 3

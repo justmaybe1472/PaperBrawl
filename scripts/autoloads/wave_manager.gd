@@ -31,6 +31,9 @@ func _on_wave_started(wave_number: int):
 	spawn_timer = 0.0
 	wave_active = true
 
+	if config.is_boss_wave:
+		_spawn_boss()
+
 func _on_enemy_killed(_enemy_id: String, _position: Vector2, _is_elite: bool):
 	enemies_alive -= 1
 
@@ -118,6 +121,29 @@ func _end_wave():
 	_clear_remaining_enemies()
 	enemies_alive = 0
 	GameManager.change_state(GameManager.GameState.SHOP)
+
+func _spawn_boss():
+	var boss_data = DataManager.get_enemy("boss")
+	if boss_data == null:
+		push_error("WaveManager: No boss enemy data found")
+		return
+
+	var boss = enemy_scene.instantiate()
+	var player = get_tree().get_first_node_in_group("player")
+	var spawn_center = player.global_position if player else Vector2(960, 540)
+	boss.global_position = spawn_center + Vector2(0, -400)
+
+	var container = get_tree().get_first_node_in_group("enemies_container")
+	if container:
+		container.add_child(boss)
+	else:
+		get_tree().root.add_child(boss)
+
+	boss.init(boss_data, GameManager.current_wave)
+	boss.set_elite(true)
+
+	enemies_spawned += 1
+	enemies_alive += 1
 
 func _clear_remaining_enemies():
 	var container = get_tree().get_first_node_in_group("enemies_container")

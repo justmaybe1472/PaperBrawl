@@ -22,6 +22,11 @@ func _apply_wave_scaling():
 	base_speed *= (1.0 + 0.03 * (wave_number - 1))
 	base_speed = min(base_speed, original_speed * 1.5)
 
+	var difficulty_mult = GameManager.get_enemy_stat_multiplier()
+	base_hp *= difficulty_mult
+	base_damage *= difficulty_mult
+	base_speed *= (1.0 + (difficulty_mult - 1.0) * 0.3)
+
 func get_stat(stat_name: String) -> float:
 	match stat_name:
 		"max_hp": return base_hp

@@ -1,7 +1,7 @@
 extends Node2D
 
 func _ready():
-	GameManager.start_run("well_rounded")
+	GameManager.start_run(GameManager.selected_character_id)
 
 func _input(event):
 	if event.is_action_pressed("pause"):

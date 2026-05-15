@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/shop.tscn" id="4_shop"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="5_pause"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_over.tscn" id="6_go"]
+[ext_resource type="PackedScene" path="res://scenes/ui/wave_announce.tscn" id="7_wa"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -21,3 +22,5 @@ script = ExtResource("1_main")
 [node name="PauseMenu" parent="UI" instance=ExtResource("5_pause")]
 
 [node name="GameOverUI" parent="UI" instance=ExtResource("6_go")]
+
+[node name="WaveAnnounce" parent="UI" instance=ExtResource("7_wa")]
