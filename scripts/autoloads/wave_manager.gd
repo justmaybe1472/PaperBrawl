@@ -115,4 +115,12 @@ func _on_summon():
 
 func _end_wave():
 	wave_active = false
+	_clear_remaining_enemies()
+	enemies_alive = 0
 	GameManager.change_state(GameManager.GameState.SHOP)
+
+func _clear_remaining_enemies():
+	var container = get_tree().get_first_node_in_group("enemies_container")
+	if container:
+		for child in container.get_children():
+			child.queue_free()

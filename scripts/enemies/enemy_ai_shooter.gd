@@ -46,5 +46,9 @@ func _shoot(direction: Vector2):
 	var proj = projectile_scene.instantiate()
 	proj.global_position = owner_body.global_position
 	proj.direction = direction
-	proj.damage = int(enemy_data.base_damage) if enemy_data else 5
+
+	var dmg: int = 5
+	if enemy_data:
+		dmg = int(enemy_data.base_damage)
+	proj.damage = dmg
 	get_tree().root.add_child(proj)

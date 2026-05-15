@@ -2,16 +2,21 @@ extends EnemyAI
 class_name EnemyAIBoss
 
 enum BossPhase { PHASE1, PHASE2, PHASE3 }
+enum ChargeState { NONE, CHARGING, RECOVERING }
+
 var boss_phase: BossPhase = BossPhase.PHASE1
+var charge_state: ChargeState = ChargeState.NONE
+var charge_state_timer: float = 0.0
 
 var shoot_timer: float = 0.0
-var charge_timer: float = 0.0
-var summon_timer: float = 0.0
+var charge_timer: float = 3.0
+var summon_timer: float = 4.0
 
 var charge_direction: Vector2 = Vector2.ZERO
-var is_charging: bool = false
 
 const CHARGE_SPEED: float = 350.0
+const CHARGE_DURATION: float = 0.8
+const CHARGE_RECOVER: float = 0.5
 const SHOOT_INTERVAL: float = 1.5
 const CHARGE_INTERVAL: float = 3.0
 const SUMMON_INTERVAL: float = 4.0
@@ -37,18 +42,29 @@ func get_move_direction() -> Vector2:
 	_update_phase(owner_body)
 
 	var to_player = player_ref.global_position - owner_body.global_position
-	var dist = to_player.length()
 
-	if is_charging:
-		return charge_direction
+	match charge_state:
+		ChargeState.CHARGING:
+			charge_state_timer -= get_process_delta_time()
+			if charge_state_timer <= 0.0:
+				charge_state = ChargeState.RECOVERING
+				charge_state_timer = CHARGE_RECOVER
+				chase_speed = 100.0
+			return charge_direction
+		ChargeState.RECOVERING:
+			charge_state_timer -= get_process_delta_time()
+			if charge_state_timer <= 0.0:
+				charge_state = ChargeState.NONE
+				charge_timer = CHARGE_INTERVAL
+			return Vector2.ZERO
 
 	match boss_phase:
 		BossPhase.PHASE1:
-			return _phase1(to_player, dist)
+			return _phase1(to_player)
 		BossPhase.PHASE2:
-			return _phase2(to_player, dist)
+			return _phase2(to_player)
 		BossPhase.PHASE3:
-			return _phase3(to_player, dist, owner_body)
+			return _phase3(to_player, owner_body)
 
 	return to_player.normalized()
 
@@ -62,25 +78,23 @@ func _update_phase(owner_body: CharacterBody2D):
 	elif hp_ratio < 0.6:
 		boss_phase = BossPhase.PHASE2
 
-func _phase1(to_player: Vector2, _dist: float) -> Vector2:
-	if charge_timer <= 0.0 and not is_charging:
-		is_charging = true
+func _phase1(to_player: Vector2) -> Vector2:
+	charge_timer -= get_process_delta_time()
+	if charge_timer <= 0.0 and charge_state == ChargeState.NONE:
+		charge_state = ChargeState.CHARGING
+		charge_state_timer = CHARGE_DURATION
 		charge_direction = to_player.normalized()
 		chase_speed = CHARGE_SPEED
-		charge_timer = CHARGE_INTERVAL
-		await get_tree().create_timer(0.8).timeout
-		is_charging = false
-		chase_speed = 100.0
 	return to_player.normalized()
 
-func _phase2(to_player: Vector2, _dist: float) -> Vector2:
+func _phase2(to_player: Vector2) -> Vector2:
 	shoot_timer -= get_process_delta_time()
 	if shoot_timer <= 0.0:
 		shoot_timer = SHOOT_INTERVAL
 		_shoot_spread(to_player.normalized())
 	return to_player.normalized()
 
-func _phase3(to_player: Vector2, _dist: float, owner_body: CharacterBody2D) -> Vector2:
+func _phase3(to_player: Vector2, owner_body: CharacterBody2D) -> Vector2:
 	shoot_timer -= get_process_delta_time()
 	summon_timer -= get_process_delta_time()
 
@@ -92,14 +106,12 @@ func _phase3(to_player: Vector2, _dist: float, owner_body: CharacterBody2D) -> V
 		summon_timer = SUMMON_INTERVAL
 		_spawn_minions(owner_body)
 
-	if charge_timer <= 0.0 and not is_charging:
-		is_charging = true
+	charge_timer -= get_process_delta_time()
+	if charge_timer <= 0.0 and charge_state == ChargeState.NONE:
+		charge_state = ChargeState.CHARGING
+		charge_state_timer = CHARGE_DURATION * 0.6
 		charge_direction = to_player.normalized()
 		chase_speed = CHARGE_SPEED
-		charge_timer = CHARGE_INTERVAL * 1.5
-		await get_tree().create_timer(0.5).timeout
-		is_charging = false
-		chase_speed = 100.0
 
 	return to_player.normalized()
 
@@ -107,13 +119,16 @@ func _shoot_spread(direction: Vector2):
 	var owner_body = get_owner_body()
 	if owner_body == null:
 		return
+	var dmg: int = 8
+	if enemy_data:
+		dmg = int(enemy_data.base_damage * 0.7)
 	for i in range(3):
 		var angle_offset = (i - 1) * 0.3
 		var dir = direction.rotated(angle_offset)
 		var proj = projectile_scene.instantiate()
 		proj.global_position = owner_body.global_position
 		proj.direction = dir
-		proj.damage = int(enemy_data.base_damage * 0.7) if enemy_data else 8
+		proj.damage = dmg
 		get_tree().root.add_child(proj)
 
 func _spawn_minions(owner_body: CharacterBody2D):

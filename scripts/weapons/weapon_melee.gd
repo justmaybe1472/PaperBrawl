@@ -6,6 +6,13 @@ class_name WeaponMelee
 func _ready():
 	super._ready()
 	melee_area.body_entered.connect(_on_melee_hit)
+	_create_visual()
+
+func _create_visual():
+	var sprite = Sprite2D.new()
+	sprite.texture = PlaceholderSprites.make_square_texture(Color(0.6, 0.6, 0.6), 10.0)
+	sprite.position = Vector2(40, 0)
+	add_child(sprite)
 
 func attack():
 	EventBus.weapon_fired.emit(weapon_id, global_position, Vector2.ZERO)

@@ -63,7 +63,7 @@ func _generate_shop(wave_number: int):
 			var wpn_pool = DataManager.weapons.values()
 			if not wpn_pool.is_empty():
 				var chosen = wpn_pool[randi() % wpn_pool.size()]
-				_shop_weapons.append({"weapon": chosen, "price": chosen.base_price * 10})
+				_shop_weapons.append({"weapon": chosen, "price": chosen.tier * 30})
 
 func _weighted_rarity(weights: Dictionary) -> String:
 	var total: float = 0.0

@@ -66,6 +66,8 @@ func set_elite(value: bool):
 func _physics_process(delta):
 	if is_dead:
 		return
+	if GameManager.current_state != GameManager.GameState.WAVE_ACTIVE:
+		return
 
 	if knockback_velocity.length() > 0:
 		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, delta * 500.0)
