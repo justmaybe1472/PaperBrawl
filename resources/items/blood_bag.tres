@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "blood_bag"
+display_name = "血袋"
+rarity = "uncommon"
+base_price = 28
+max_stack = 3
+stat_modifiers = {"max_hp": 5, "life_steal": 2}
+tags = []
+description = "+5 最大生命值，+2% 生命偷取"

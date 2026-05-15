@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WaveConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/wave_config.gd" id="1_wav"]
+
+[resource]
+script = ExtResource("1_wav")
+wave_number = 4
+duration = 25.0
+total_enemies = 30
+spawn_interval = 0.83
+enemy_types = {"basic_melee": 7, "fast_chaser": 3}
+elite_chance = 0.0
+material_multiplier = 1.1
+is_boss_wave = false

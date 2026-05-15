@@ -8,6 +8,7 @@ wave_number = 3
 duration = 25.0
 total_enemies = 25
 spawn_interval = 1.0
+enemy_types = {"basic_melee": 7, "fast_chaser": 3}
 elite_chance = 0.0
 material_multiplier = 1.1
 is_boss_wave = false

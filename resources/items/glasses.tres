@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "glasses"
+display_name = "眼镜"
+rarity = "common"
+base_price = 20
+max_stack = 5
+stat_modifiers = {"range": 15}
+tags = []
+description = "+15 攻击范围"

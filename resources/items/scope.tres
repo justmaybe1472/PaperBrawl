@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "scope"
+display_name = "瞄准镜"
+rarity = "uncommon"
+base_price = 32
+max_stack = 3
+stat_modifiers = {"ranged_damage": 3, "range": 20}
+tags = []
+description = "+3 远程伤害，+20 范围"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "fire_essence"
+display_name = "火焰精华"
+rarity = "uncommon"
+base_price = 35
+max_stack = 3
+stat_modifiers = {"elemental_damage": 4}
+tags = []
+description = "+4 元素伤害"

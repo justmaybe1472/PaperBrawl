@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "phoenix_feather"
+display_name = "凤凰羽毛"
+rarity = "legendary"
+base_price = 110
+max_stack = 1
+stat_modifiers = {"max_hp": 8, "hp_regen": 5, "life_steal": 3}
+tags = []
+description = "+8 最大生命值，+5 生命再生，+3% 生命偷取"

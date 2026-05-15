@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "dragon_scale"
+display_name = "龙鳞"
+rarity = "legendary"
+base_price = 100
+max_stack = 1
+stat_modifiers = {"armor": 5, "dodge": 3, "damage_pct": 10}
+tags = []
+description = "+5 护甲，+3% 闪避，+10% 伤害"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "berserker_ring"
+display_name = "狂战士戒指"
+rarity = "rare"
+base_price = 60
+max_stack = 2
+stat_modifiers = {"attack_speed": 15, "crit_chance": 3}
+tags = []
+description = "+15% 攻速，+3% 暴击率"

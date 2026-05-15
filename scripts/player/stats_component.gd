@@ -6,6 +6,7 @@ var current_stats: Dictionary = {}
 var stat_modifiers: Dictionary = {}
 
 var hp: int = 0
+var regen_accumulator: float = 0.0
 
 func init_from_character(character_data: CharacterData):
 	base_stats = character_data.base_stats.duplicate(true)
@@ -49,3 +50,17 @@ func heal(amount: int):
 
 func is_dead() -> bool:
 	return hp <= 0
+
+func _process(delta):
+	if GameManager.current_state != GameManager.GameState.WAVE_ACTIVE:
+		return
+	if hp <= 0 or hp >= int(get_stat("max_hp")):
+		regen_accumulator = 0.0
+		return
+	var regen = get_stat("hp_regen")
+	if regen > 0:
+		regen_accumulator += regen * delta
+		if regen_accumulator >= 1.0:
+			var heal_amount = int(regen_accumulator)
+			regen_accumulator -= heal_amount
+			heal(heal_amount)

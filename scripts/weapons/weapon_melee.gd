@@ -27,6 +27,11 @@ func _on_melee_hit(body: Node2D):
 	enemy.take_damage(result["damage"])
 	EventBus.damage_dealt.emit(self, enemy, result["damage"], result["is_crit"])
 
+	var lifesteal = player_stats.get_stat("life_steal")
+	if lifesteal > 0 and randf() * 100.0 < lifesteal:
+		var heal_amount = max(1, int(result["damage"] * 0.1))
+		player_stats.heal(heal_amount)
+
 	if weapon_data.knockback > 0:
 		var knockback_dir = (enemy.global_position - global_position).normalized()
 		enemy.apply_knockback(knockback_dir * weapon_data.knockback)

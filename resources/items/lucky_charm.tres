@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "lucky_charm"
+display_name = "幸运符"
+rarity = "common"
+base_price = 18
+max_stack = 5
+stat_modifiers = {"luck": 5}
+tags = []
+description = "+5 幸运"

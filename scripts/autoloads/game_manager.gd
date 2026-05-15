@@ -7,12 +7,20 @@ var current_wave: int = 1
 var materials: int = 0
 var selected_character_id: String = "well_rounded"
 var is_first_wave: bool = true
+var total_kills: int = 0
+var is_victory: bool = false
+
+func _ready():
+	EventBus.shop_closed.connect(_on_shop_closed)
+	EventBus.enemy_killed.connect(_on_enemy_killed_for_stats)
 
 func start_run(character_id: String):
 	selected_character_id = character_id
 	current_wave = 1
 	materials = 0
 	is_first_wave = true
+	total_kills = 0
+	is_victory = false
 	change_state(GameState.WAVE_ACTIVE)
 
 func change_state(new_state: GameState):
@@ -26,25 +34,33 @@ func change_state(new_state: GameState):
 		GameState.SHOP:
 			EventBus.wave_completed.emit(current_wave)
 			EventBus.shop_opened.emit(current_wave)
-			_auto_advance_from_shop()
 		GameState.GAME_OVER:
 			EventBus.game_over.emit(current_wave, materials)
 
-func _auto_advance_from_shop():
-	await get_tree().create_timer(2.0).timeout
-	if current_state == GameState.SHOP:
-		next_wave()
-
 func next_wave():
 	current_wave += 1
-	if current_wave > 3:
+	if current_wave > 20:
 		_handle_victory()
 	else:
 		change_state(GameState.WAVE_ACTIVE)
 
 func _handle_victory():
+	is_victory = true
 	change_state(GameState.GAME_OVER)
 
 func add_materials(amount: int):
 	materials += amount
 	EventBus.material_collected.emit(amount, materials)
+
+func spend_materials(amount: int) -> bool:
+	if materials >= amount:
+		materials -= amount
+		EventBus.material_collected.emit(-amount, materials)
+		return true
+	return false
+
+func _on_shop_closed():
+	next_wave()
+
+func _on_enemy_killed_for_stats(_enemy_id: String, _position: Vector2, _is_elite: bool):
+	total_kills += 1

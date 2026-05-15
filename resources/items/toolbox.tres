@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "toolbox"
+display_name = "工具箱"
+rarity = "uncommon"
+base_price = 30
+max_stack = 3
+stat_modifiers = {"engineering": 4}
+tags = []
+description = "+4 工程学"

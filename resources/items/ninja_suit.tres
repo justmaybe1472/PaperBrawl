@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "ninja_suit"
+display_name = "忍者服"
+rarity = "rare"
+base_price = 55
+max_stack = 2
+stat_modifiers = {"dodge": 5, "speed": 10}
+tags = []
+description = "+5% 闪避率，+10% 速度"

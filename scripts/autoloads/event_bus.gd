@@ -14,6 +14,7 @@ signal all_enemies_cleared()
 
 # ---- Shop Events ----
 signal shop_opened(wave_number: int)
+signal shop_closed()
 signal item_purchased(item_id: String, price: int)
 signal weapon_purchased(weapon_id: String, price: int)
 signal shop_refreshed()

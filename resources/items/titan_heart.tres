@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "titan_heart"
+display_name = "泰坦之心"
+rarity = "rare"
+base_price = 65
+max_stack = 2
+stat_modifiers = {"max_hp": 10, "hp_regen": 3}
+tags = []
+description = "+10 最大生命值，+3 生命再生"

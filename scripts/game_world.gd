@@ -1,9 +1,11 @@
 extends Node2D
 
 @onready var enemies_container: Node2D = $Enemies
+@onready var pickups_container: Node2D = $Pickups
 
 func _ready():
 	enemies_container.add_to_group("enemies_container")
+	pickups_container.add_to_group("pickups_container")
 	_create_floor()
 	_create_boundaries()
 	_spawn_player()

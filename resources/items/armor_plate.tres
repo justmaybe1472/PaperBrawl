@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "armor_plate"
+display_name = "护甲片"
+rarity = "common"
+base_price = 18
+max_stack = 5
+stat_modifiers = {"armor": 2}
+tags = []
+description = "+2 护甲"

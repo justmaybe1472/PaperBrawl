@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+
+[resource]
+script = ExtResource("1_itm")
+id = "caffeine"
+display_name = "咖啡因"
+rarity = "common"
+base_price = 22
+max_stack = 3
+stat_modifiers = {"attack_speed": 10}
+tags = []
+description = "+10% 攻击速度"

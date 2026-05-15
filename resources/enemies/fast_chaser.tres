@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_emy"]
+
+[resource]
+script = ExtResource("1_emy")
+id = "fast_chaser"
+enemy_type = "chaser"
+base_hp = 8.0
+base_damage = 4.0
+base_speed = 160.0
+material_drop = 1
+sprite_path = ""
