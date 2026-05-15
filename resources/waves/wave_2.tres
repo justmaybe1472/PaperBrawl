@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WaveConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/wave_config.gd" id="2_wav"]
+
+[resource]
+script = ExtResource("2_wav")
+wave_number = 2
+duration = 20.0
+total_enemies = 20
+spawn_interval = 1.0
+elite_chance = 0.0
+material_multiplier = 1.0
+is_boss_wave = false

@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/player/stats_component.gd" id="2_stats"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hurtbox"]
+radius = 22.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pickup"]
+radius = 80.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 34
+script = ExtResource("1_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_hurtbox")
+
+[node name="WeaponContainer" type="Node2D" parent="."]
+
+[node name="PickupRadius" type="Area2D" parent="."]
+collision_layer = 1
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupRadius"]
+shape = SubResource("CircleShape2D_pickup")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="IFrameTimer" type="Timer" parent="."]
+one_shot = true
+wait_time = 0.5
+
+[node name="StatsComponent" type="Node" parent="."]
+script = ExtResource("2_stats")

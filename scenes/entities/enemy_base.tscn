@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_base.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="2_estats"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy_ai.gd" id="3_eai"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_enemy"]
+radius = 14.0
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 33
+script = ExtResource("1_enemy")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_enemy")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_enemy")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="AIStateMachine" type="Node" parent="."]
+script = ExtResource("3_eai")
+
+[node name="EnemyStats" type="Node" parent="."]
+script = ExtResource("2_estats")
