@@ -1,8 +1,6 @@
 extends Node2D
 
 func _ready():
-	GameManager.selected_character_id = "well_rounded"
-	await get_tree().process_frame
 	GameManager.start_run("well_rounded")
 
 func _input(event):

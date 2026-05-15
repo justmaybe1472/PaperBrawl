@@ -5,7 +5,7 @@ enum GameState { MAIN_MENU, CHARACTER_SELECT, WAVE_ACTIVE, SHOP, PAUSED, GAME_OV
 var current_state: GameState = GameState.MAIN_MENU
 var current_wave: int = 1
 var materials: int = 0
-var selected_character_id: String = ""
+var selected_character_id: String = "well_rounded"
 var is_first_wave: bool = true
 
 func start_run(character_id: String):

@@ -1,7 +1,7 @@
 class_name DamageSystem
 extends RefCounted
 
-static func calculate_damage(weapon_data: WeaponData, attacker_stats: StatsComponent, target_stats: StatsComponent) -> Dictionary:
+static func calculate_damage(weapon_data: WeaponData, attacker_stats, target_stats) -> Dictionary:
 	var damage: float = weapon_data.base_damage
 
 	# Global damage %
