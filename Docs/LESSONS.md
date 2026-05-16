@@ -64,6 +64,27 @@
 - **修复**：改用 `ObjectPool.return_enemy()` 归还到池中
 - **预防**：实现对象池后，全局搜索 `queue_free()` 确认所有调用点是否应改为池归还
 
+### [2026-05-16] 投射物预计算伤害导致闪避/护甲被绕过
+- **场景**：`weapon_ranged.gd` 和 `weapon_elemental.gd` 在发射投射物时预先调用 `DamageSystem.calculate_damage(weapon_data, player_stats, null)`，`projectile_base.gd` 命中时直接使用预计算值
+- **错误**：预计算传入 null 作为 target_stats 导致崩溃；命中时未重新计算，敌方闪避和护甲完全无效
+- **根因**：伤害计算应在命中时执行（可获取实际目标 stats），而非发射时预计算
+- **修复**：移除发射时的预计算 (`_spawn_projectile`)，改为在 `projectile_base._on_body_entered()` 命中时调用 `DamageSystem.calculate_damage(weapon_data, attacker_stats, enemy.stats)`
+- **预防**：任何延迟命中型攻击（投射物、炮塔、地雷），伤害计算必须在命中时执行，传入实际目标的 stats
+
+### [2026-05-16] 工程武器手动计算伤害绕过 DamageSystem
+- **场景**：`weapon_engineering.gd` 直接计算 `base_damage * (1 + engineering / 100)`
+- **错误**：手动计算跳过全局 `damage_pct` 加成、暴击判定、目标闪避和护甲减免
+- **根因**：炮塔/地雷作为独立脚本，未持有 `weapon_data` 和 `attacker_stats` 引用，无法调用 DamageSystem
+- **修复**：将 `weapon_data` 和 `attacker_stats` 传入 `turret_deploy.gd` / `mine_deploy.gd`，命中时调用 `DamageSystem.calculate_damage()`
+- **预防**：所有伤害计算必须通过 `DamageSystem.calculate_damage()` 统一入口，禁止任何脚本自行计算伤害值
+
+### [2026-05-16] 道具堆叠上限 max_stack 未实现
+- **场景**：`ItemData.max_stack` 字段已定义（多数道具限制 1-5 个），但购买时无检查
+- **错误**：同一道具可无限购买，属性无上限叠加
+- **根因**：Phase 2-3 实现道具系统时遗漏了堆叠上限检查
+- **修复**：在 `Player` 中新增 `_item_stack_counts` 字典追踪每道具购买次数，`can_purchase_item()` 方法检查上限，`shop_ui.gd` 购买前调用检查
+- **预防**：Resource 类中的约束字段（max_stack、max_hp_modifier 等）必须在购买/装备/初始化逻辑中读取并校验
+
 ---
 
 ## 常见防空指南（给玩家/开发者）

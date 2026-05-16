@@ -88,10 +88,10 @@
 目标：修复崩溃级 Bug 和核心战斗逻辑缺失，确保所有武器类型正常工作。
 
 **步骤：**
-- [ ] 1. 修复远程/元素武器崩溃 — `DamageSystem.calculate_damage()` 在 `target_stats` 为 null 时访问 `target_stats.get_stat("dodge")` 直接崩溃。`weapon_ranged.gd` 和 `weapon_elemental.gd` 的 `_spawn_projectile()` 传入 `null` 作为 target_stats。修改 `DamageSystem` 对 null target_stats 做防御处理（跳过闪避和护甲计算），或改为投射物命中时再计算伤害。
-- [ ] 2. 修复投射物无视闪避/护甲 — `projectile_base.gd:_on_body_entered()` 使用预计算的 `damage` 值直接调用 `enemy.take_damage()`，完全跳过 `DamageSystem` 中的目标闪避和护甲减免。应将伤害计算移至命中时，在 `_on_body_entered` 中传入实际敌人的 stats 重新调用 `DamageSystem.calculate_damage()`。
-- [ ] 3. 修复工程武器绕过伤害系统 — `weapon_engineering.gd` 中炮塔和地雷的伤害手动计算（`base_damage * engineering_mult`），未经过 `DamageSystem`，导致无暴击、无全局 `damage_pct` 加成、无目标闪避/护甲。改为在 `turret_deploy.gd` 和 `mine_deploy.gd` 命中时调用 `DamageSystem.calculate_damage()`。
-- [ ] 4. 实现道具堆叠上限（max_stack）— `ItemData` 有 `max_stack` 字段，多数道具限制 1-5 个，但 `StatsComponent.add_modifier()` 无堆叠数量检查。在 `Player` 或 `StatsComponent` 中增加 `_item_stack_counts: Dictionary` 记录每个道具的购买次数，购买前检查是否已达 `max_stack`（0 表示无限制），已达上限时阻止购买并提示。
+- [√] 1. 修复远程/元素武器崩溃 — `DamageSystem.calculate_damage()` 在 `target_stats` 为 null 时访问 `target_stats.get_stat("dodge")` 直接崩溃。`weapon_ranged.gd` 和 `weapon_elemental.gd` 的 `_spawn_projectile()` 传入 `null` 作为 target_stats。修改 `DamageSystem` 对 null target_stats 做防御处理（跳过闪避和护甲计算），或改为投射物命中时再计算伤害。
+- [√] 2. 修复投射物无视闪避/护甲 — `projectile_base.gd:_on_body_entered()` 使用预计算的 `damage` 值直接调用 `enemy.take_damage()`，完全跳过 `DamageSystem` 中的目标闪避和护甲减免。应将伤害计算移至命中时，在 `_on_body_entered` 中传入实际敌人的 stats 重新调用 `DamageSystem.calculate_damage()`。
+- [√] 3. 修复工程武器绕过伤害系统 — `weapon_engineering.gd` 中炮塔和地雷的伤害手动计算（`base_damage * engineering_mult`），未经过 `DamageSystem`，导致无暴击、无全局 `damage_pct` 加成、无目标闪避/护甲。改为在 `turret_deploy.gd` 和 `mine_deploy.gd` 命中时调用 `DamageSystem.calculate_damage()`。
+- [√] 4. 实现道具堆叠上限（max_stack）— `ItemData` 有 `max_stack` 字段，多数道具限制 1-5 个，但 `StatsComponent.add_modifier()` 无堆叠数量检查。在 `Player` 或 `StatsComponent` 中增加 `_item_stack_counts: Dictionary` 记录每个道具的购买次数，购买前检查是否已达 `max_stack`（0 表示无限制），已达上限时阻止购买并提示。
 
 **验证标准**：购买并使用远程/元素/工程武器不报错；投射物伤害正确计算闪避和护甲；同一道具购买次数不超过 max_stack。
 

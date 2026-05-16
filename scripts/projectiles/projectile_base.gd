@@ -31,8 +31,15 @@ func _on_body_entered(body: Node2D):
 	if enemy == null or enemy.is_dead:
 		return
 
-	enemy.take_damage(int(damage))
-	EventBus.damage_dealt.emit(self, enemy, int(damage), is_crit)
+	# 命中时重新计算伤害，传入实际敌人的 stats 以正确应用闪避和护甲
+	var dmg_result = DamageSystem.calculate_damage(weapon_data, attacker_stats, enemy.stats)
+	if dmg_result["dodged"]:
+		return
+	var final_damage: int = dmg_result["damage"]
+	var final_is_crit: bool = dmg_result["is_crit"]
+
+	enemy.take_damage(final_damage)
+	EventBus.damage_dealt.emit(self, enemy, final_damage, final_is_crit)
 
 	if knockback > 0:
 		var kb_dir = (enemy.global_position - global_position).normalized()
@@ -41,7 +48,7 @@ func _on_body_entered(body: Node2D):
 	if attacker_stats:
 		var lifesteal = attacker_stats.get_stat("life_steal")
 		if lifesteal > 0 and randf() * 100.0 < lifesteal:
-			var heal_amount = max(1, int(damage * 0.1))
+			var heal_amount = max(1, int(final_damage * 0.1))
 			attacker_stats.heal(heal_amount)
 
 	if pierce_left > 0:

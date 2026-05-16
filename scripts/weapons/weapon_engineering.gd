@@ -45,8 +45,7 @@ func _deploy_turret(pos: Vector2):
 	turret.set_script(TURRET_SCRIPT)
 	var lifetime: float = 8.0 + player_stats.get_stat("engineering") * 0.1
 	var fire_rate: float = max(0.3, weapon_data.cooldown / 2.0)
-	var turret_damage: float = weapon_data.base_damage * (1.0 + player_stats.get_stat("engineering") / 100.0)
-	turret.setup(lifetime, fire_rate, turret_damage, weapon_data.range)
+	turret.setup(lifetime, fire_rate, weapon_data, player_stats)
 
 	get_tree().root.add_child(turret)
 	deployed_nodes.append(turret)
@@ -67,8 +66,7 @@ func _deploy_mine(pos: Vector2):
 	mine.add_child(shape)
 
 	mine.set_script(MINE_SCRIPT)
-	var mine_damage: float = weapon_data.base_damage * (1.0 + player_stats.get_stat("engineering") / 50.0)
-	mine.setup(mine_damage, weapon_data.knockback)
+	mine.setup(weapon_data, player_stats, weapon_data.knockback)
 
 	get_tree().root.add_child(mine)
 	deployed_nodes.append(mine)

@@ -56,9 +56,4 @@ func _spawn_projectile(pos: Vector2, dir: Vector2):
 	proj.knockback = weapon_data.knockback
 	proj.weapon_data = weapon_data
 	proj.attacker_stats = player_stats
-
-	var result = DamageSystem.calculate_damage(weapon_data, player_stats, null)
-	proj.damage = result["damage"]
-	proj.is_crit = result["is_crit"]
-
 	get_tree().root.add_child(proj)

@@ -12,6 +12,7 @@ class_name Player
 
 var is_invincible: bool = false
 var weapon_slots
+var _item_stack_counts: Dictionary = {}  # item_id -> count，追踪道具购买次数
 
 func _ready():
 	add_to_group("player")
@@ -92,10 +93,28 @@ func _on_pickup_entered(body: Node2D):
 	if body.has_method("start_attraction"):
 		body.start_attraction(self)
 
+func can_purchase_item(item_id: String) -> bool:
+	# 检查道具堆叠上限，max_stack=0 表示无限制
+	var item_data = DataManager.get_item(item_id)
+	if item_data == null:
+		return false
+	if item_data.max_stack <= 0:
+		return true
+	var current = _item_stack_counts.get(item_id, 0)
+	return current < item_data.max_stack
+
+func get_item_stack_count(item_id: String) -> int:
+	return _item_stack_counts.get(item_id, 0)
+
 func _on_item_purchased(item_id: String, _price: int):
 	var item_data = DataManager.get_item(item_id)
 	if item_data == null:
 		return
+	# 堆叠上限检查（再次确认，防止意外绕过）
+	if not can_purchase_item(item_id):
+		return
+	# 递增堆叠计数
+	_item_stack_counts[item_id] = _item_stack_counts.get(item_id, 0) + 1
 	var source = "item:" + item_id
 	for stat_name in item_data.stat_modifiers:
 		var value = item_data.stat_modifiers[stat_name]

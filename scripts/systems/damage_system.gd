@@ -27,17 +27,17 @@ static func calculate_damage(weapon_data: WeaponData, attacker_stats, target_sta
 		is_crit = true
 		damage *= weapon_data.crit_multiplier
 
-	# Target dodge
-	var dodge_roll: float = randf() * 100.0
-	if dodge_roll < target_stats.get_stat("dodge"):
-		return {"damage": 0, "is_crit": false, "dodged": true}
+	# Target dodge/armor — 仅在有 target_stats 时计算，否则跳过
+	if target_stats != null:
+		var dodge_roll: float = randf() * 100.0
+		if dodge_roll < target_stats.get_stat("dodge"):
+			return {"damage": 0, "is_crit": false, "dodged": true}
 
-	# Target armor
-	var armor: float = target_stats.get_stat("armor")
-	var armor_reduction: float = armor / (armor + 100.0)
-	armor_reduction = min(armor_reduction, 0.9)
+		var armor: float = target_stats.get_stat("armor")
+		var armor_reduction: float = armor / (armor + 100.0)
+		armor_reduction = min(armor_reduction, 0.9)
+		damage = damage * (1.0 - armor_reduction)
 
-	var final_damage: float = damage * (1.0 - armor_reduction)
-	final_damage = max(1.0, roundi(final_damage))
+	var final_damage: float = max(1.0, roundi(damage))
 
 	return {"damage": int(final_damage), "is_crit": is_crit, "dodged": false}

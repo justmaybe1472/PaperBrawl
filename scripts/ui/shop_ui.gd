@@ -202,10 +202,17 @@ func _on_buy_item(index: int, btn: Button):
 	if index >= _shop_items.size():
 		return
 	var slot = _shop_items[index]
+	var item_data: ItemData = slot["item"]
+	# 检查道具堆叠上限
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_method("can_purchase_item"):
+		if not player.can_purchase_item(item_data.id):
+			btn.text = "已达上限"
+			btn.disabled = true
+			return
 	var price: int = slot["price"]
 	if not GameManager.spend_materials(price):
 		return
-	var item_data: ItemData = slot["item"]
 	EventBus.item_purchased.emit(item_data.id, price)
 	btn.disabled = true
 	btn.text = "已购买"
