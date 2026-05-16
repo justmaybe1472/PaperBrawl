@@ -1,6 +1,29 @@
 class_name PlaceholderSprites
 extends RefCounted
 
+const TEX_PATH = "res://assets/TestTexture/"
+const TEX_SIZE = 216.0  # TestTexture 统一尺寸，所有缩放基于此基准计算
+
+# 加载 TestTexture 并根据目标尺寸返回缩放值
+static func load_test_texture(file_name: String) -> ImageTexture:
+	var path = TEX_PATH + file_name
+	if ResourceLoader.exists(path):
+		var res = load(path)
+		if res is CompressedTexture2D or res is ImageTexture:
+			return res
+	return null
+
+static func get_scale_for_size(target_size: float) -> float:
+	return target_size / TEX_SIZE  # 比例缩放，保证不同尺寸需求使用同一纹理
+
+# 为 Sprite2D 应用 TestTexture，自动缩放至目标尺寸
+static func apply_test_texture(sprite: Sprite2D, file_name: String, target_size: float):
+	var tex = load_test_texture(file_name)
+	if tex:
+		sprite.texture = tex
+		sprite.scale = Vector2.ONE * get_scale_for_size(target_size)
+		sprite.centered = true
+
 static func make_square_texture(color: Color, size: float) -> ImageTexture:
 	var image = Image.create(int(size), int(size), false, Image.FORMAT_RGBA8)
 	image.fill(color)

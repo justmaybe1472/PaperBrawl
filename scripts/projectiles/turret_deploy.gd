@@ -17,7 +17,7 @@ func _process(delta):
 	_life -= delta
 	_fire_timer -= delta
 	if _life <= 0.0:
-		queue_free()
+		queue_free()  # 炮塔到期自毁
 		return
 
 	if _fire_timer <= 0.0:
@@ -25,10 +25,10 @@ func _process(delta):
 		var enemies = get_overlapping_bodies()
 		for body in enemies:
 			if body.is_in_group("enemy") and not body.is_dead:
-				# 通过 DamageSystem 正确计算暴击、目标闪避和护甲
+				# 通过 DamageSystem 统一计算暴击、目标闪避和护甲，保证所有伤害来源一致
 				var result = DamageSystem.calculate_damage(_weapon_data, _attacker_stats, body.stats)
 				if result["dodged"]:
-					break
+					break  # 被闪避则不造成伤害，跳过该敌人
 				body.take_damage(result["damage"])
 				EventBus.damage_dealt.emit(self, body, result["damage"], result["is_crit"])
-				break
+				break  # 每次发射只命中一个敌人

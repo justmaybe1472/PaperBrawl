@@ -1,8 +1,8 @@
 extends Control
 
-var _shop_items: Array = []
-var _shop_weapons: Array = []
-var _refreshed: bool = false
+var _shop_items: Array = []  # 当前商店的道具列表
+var _shop_weapons: Array = []  # 当前商店的武器列表
+var _refreshed: bool = false  # 是否已使用刷新，每轮商店仅允许刷新一次
 var _refresh_price: int = 0
 
 func _ready():
@@ -11,22 +11,31 @@ func _ready():
 
 func _on_shop_opened(wave_number: int):
 	_refreshed = false
-	_refresh_price = wave_number * 1
+	_refresh_price = wave_number * 1  # 刷新价格随波次递增
 	_generate_shop(wave_number)
 	_build_ui(wave_number)
 	show()
 
 func _generate_shop(wave_number: int):
+	# 从玩家 stats 组件读取运气值，影响稀有度和武器出现概率
 	var luck: float = 0.0
 	var player = get_tree().get_first_node_in_group("player")
 	if player and player.has_node("StatsComponent"):
 		luck = player.get_node("StatsComponent").get_stat("luck")
 
+	# 获取所有道具，仅保留已解锁的——未解锁道具不参与抽选
 	var items_pool = DataManager.items.values()
+	var filtered_items = []
+	for item in items_pool:
+		if SaveManager.is_item_unlocked(item.id):
+			filtered_items.append(item)
+	items_pool = filtered_items
 	if items_pool.is_empty():
 		return
 
-	# Rarity weights adjusted by luck
+	# 稀有度权重受运气影响：
+	# - 运气高时，common 权重降低，rare/legendary 权重提高
+	# - 所有稀有度保底为 5.0（legendary 保底 1.0），确保极端运气下仍可能出现
 	var rarity_weights = {
 		"common": max(5.0, 60.0 - luck * 0.3),
 		"uncommon": max(5.0, 25.0 + luck * 0.1),
@@ -34,15 +43,17 @@ func _generate_shop(wave_number: int):
 		"legendary": max(1.0, 3.0 + luck * 0.05),
 	}
 
-	# Generate 4 unique items
+	# 生成 4 个不重复的道具
 	_shop_items.clear()
 	var used_ids = []
 	for i in range(4):
 		var rarity = _weighted_rarity(rarity_weights)
+		# 先从指定稀有度中选择未使用的道具
 		var pool = []
 		for item in items_pool:
 			if item.rarity == rarity and item.id not in used_ids:
 				pool.append(item)
+		# 如果指定稀有度没有可用道具，回退到全池
 		if pool.is_empty():
 			for item in items_pool:
 				if item.id not in used_ids:
@@ -52,19 +63,28 @@ func _generate_shop(wave_number: int):
 
 		var chosen = pool[randi() % pool.size()]
 		used_ids.append(chosen.id)
+		# 价格随波次递增，每波次涨 5%
 		var price = int(chosen.base_price * (1.0 + 0.05 * (wave_number - 1)))
 		_shop_items.append({"item": chosen, "price": price})
 
-	# Generate 0-2 weapons
+	# 生成 0-2 个武器，每个槽位独立概率判定
 	_shop_weapons.clear()
+	# 武器出现概率：基础 40%，运气每 200 点额外增加 1% 概率
 	var weapon_chance = 0.4 * (1.0 + luck / 200.0)
 	for i in range(2):
 		if randf() < weapon_chance:
 			var wpn_pool = DataManager.weapons.values()
-			if not wpn_pool.is_empty():
-				var chosen = wpn_pool[randi() % wpn_pool.size()]
+			# 过滤未解锁武器——玩家只能购买已解锁的武器
+			var filtered_wpn = []
+			for wpn in wpn_pool:
+				if SaveManager.is_weapon_unlocked(wpn.id):
+					filtered_wpn.append(wpn)
+			if not filtered_wpn.is_empty():
+				var chosen = filtered_wpn[randi() % filtered_wpn.size()]
+				# 武器价格 = 品质 * 30，高品质武器更贵
 				_shop_weapons.append({"weapon": chosen, "price": chosen.tier * 30})
 
+# 根据权重字典进行加权随机抽取，返回选中的稀有度名称
 func _weighted_rarity(weights: Dictionary) -> String:
 	var total: float = 0.0
 	for w in weights.values():
@@ -75,19 +95,21 @@ func _weighted_rarity(weights: Dictionary) -> String:
 		cumulative += weights[rarity]
 		if roll <= cumulative:
 			return rarity
-	return "common"
+	return "common"  # 保险回退，理论上不会执行
 
 func _build_ui(wave_number: int):
+	# 先清理旧 UI，再等待一帧确保节点完全释放
 	for child in get_children():
 		child.queue_free()
 	await get_tree().process_frame
 	_clear_children()
 
+	# 绘制商店半透明面板
 	var panel = Panel.new()
 	panel.size = Vector2(900, 520)
 	panel.position = Vector2(190, 100)
 	var panel_style = StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.1, 0.1, 0.15, 0.92)
+	panel_style.bg_color = Color(0.1, 0.1, 0.15, 0.92)  # 深色半透明背景，突出商店内容
 	panel.add_theme_stylebox_override("panel", panel_style)
 	add_child(panel)
 
@@ -190,6 +212,7 @@ func _clear_children():
 	for child in get_children():
 		child.queue_free()
 
+# 稀有度对应的显示颜色：白/蓝/紫/橙，符合常见游戏品质配色
 func _rarity_color(rarity: String) -> Color:
 	match rarity:
 		"common": return Color.WHITE
@@ -203,7 +226,8 @@ func _on_buy_item(index: int, btn: Button):
 		return
 	var slot = _shop_items[index]
 	var item_data: ItemData = slot["item"]
-	# 检查道具堆叠上限
+	# 先在客户端侧检查堆叠上限，达到上限则按钮变为"已达上限"
+	# Player 侧有双重校验，这里提前拦截避免无效的材料扣除
 	var player = get_tree().get_first_node_in_group("player")
 	if player and player.has_method("can_purchase_item"):
 		if not player.can_purchase_item(item_data.id):
@@ -211,7 +235,7 @@ func _on_buy_item(index: int, btn: Button):
 			btn.disabled = true
 			return
 	var price: int = slot["price"]
-	if not GameManager.spend_materials(price):
+	if not GameManager.spend_materials(price):  # 材料不足则不扣费
 		return
 	EventBus.item_purchased.emit(item_data.id, price)
 	btn.disabled = true
@@ -223,15 +247,16 @@ func _on_buy_weapon(index: int, btn: Button):
 		return
 	var slot = _shop_weapons[index]
 	var price: int = slot["price"]
-	if not GameManager.spend_materials(price):
+	if not GameManager.spend_materials(price):  # 材料不足时不执行
 		return
 	var weapon_data: WeaponData = slot["weapon"]
-	EventBus.weapon_purchased.emit(weapon_data.id, price)
+	EventBus.weapon_purchased.emit(weapon_data.id, price)  # Player 监听此信号处理武器添加
 	btn.disabled = true
 	btn.text = "已购买"
 	_update_materials_display()
 
 func _on_refresh(btn: Button):
+	# 每轮商店只能刷新一次
 	if _refreshed:
 		return
 	if not GameManager.spend_materials(_refresh_price):
@@ -239,14 +264,16 @@ func _on_refresh(btn: Button):
 	_refreshed = true
 	btn.disabled = true
 	EventBus.shop_refreshed.emit()
+	# 重新生成商店物品并重建 UI
 	_generate_shop(GameManager.current_wave)
 	_build_ui(GameManager.current_wave)
 
 func _on_continue():
 	hide()
-	EventBus.shop_closed.emit()
+	EventBus.shop_closed.emit()  # 告知 GameManager 回到波次阶段
 
 func _update_materials_display():
+	# 购买后刷新材料数量显示
 	var label = find_child("MaterialLabel", true, false)
 	if label:
 		label.text = "材料: " + str(GameManager.materials)

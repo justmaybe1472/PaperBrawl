@@ -9,21 +9,23 @@ func _ready():
 	_music_player = AudioStreamPlayer.new()
 	_music_player.bus = "Master"
 	add_child(_music_player)
-	_generate_sounds()
+	_generate_sounds()  # 程序化生成所有音效，无需外部音频文件
 	_connect_events()
 
 func _generate_sounds():
+	# 不同事件使用不同频率和时长以区分音色：高频=清脆，低频=沉重
 	_sounds["hit"] = _generate_tone(440.0, 0.06, 0.3)
-	_sounds["crit_hit"] = _generate_tone(660.0, 0.1, 0.4)
+	_sounds["crit_hit"] = _generate_tone(660.0, 0.1, 0.4)  # 暴击音效更高更响亮
 	_sounds["enemy_kill"] = _generate_tone(220.0, 0.12, 0.25)
-	_sounds["pickup"] = _generate_tone(880.0, 0.04, 0.2)
-	_sounds["wave_start"] = _generate_tone_burst([523.0, 659.0, 784.0], 0.15, 0.3)
-	_sounds["player_hurt"] = _generate_tone(150.0, 0.15, 0.35)
+	_sounds["pickup"] = _generate_tone(880.0, 0.04, 0.2)  # 短促高音，拾取反馈轻快
+	_sounds["wave_start"] = _generate_tone_burst([523.0, 659.0, 784.0], 0.15, 0.3)  # 上行音阶暗示开始
+	_sounds["player_hurt"] = _generate_tone(150.0, 0.15, 0.35)  # 低频长音表示受伤严重
 	_sounds["shop_buy"] = _generate_tone(600.0, 0.08, 0.3)
-	_sounds["game_over"] = _generate_tone_burst([400.0, 300.0, 200.0], 0.3, 0.4)
-	_sounds["victory"] = _generate_tone_burst([523.0, 659.0, 784.0, 1047.0], 0.2, 0.4)
+	_sounds["game_over"] = _generate_tone_burst([400.0, 300.0, 200.0], 0.3, 0.4)  # 下行音阶暗示失败
+	_sounds["victory"] = _generate_tone_burst([523.0, 659.0, 784.0, 1047.0], 0.2, 0.4)  # 完整上行音阶庆祝胜利
 
 func _connect_events():
+	# 通过EventBus将游戏事件与音效解耦，各处代码无需直接依赖AudioManager
 	EventBus.damage_dealt.connect(func(_s, _t, _a, is_crit): _play("crit_hit" if is_crit else "hit"))
 	EventBus.enemy_killed.connect(func(_id, _pos, _elite): _play("enemy_kill"))
 	EventBus.material_collected.connect(func(_a, _t): _play("pickup"))
@@ -41,6 +43,7 @@ func _connect_events():
 func _play(sound_name: String):
 	if not _sounds.has(sound_name):
 		return
+	# 每次播放创建临时AudioStreamPlayer，播完后自动释放
 	var player = AudioStreamPlayer.new()
 	player.bus = "Master"
 	player.stream = _sounds[sound_name]
@@ -49,6 +52,8 @@ func _play(sound_name: String):
 	player.play()
 
 func _generate_tone(frequency: float, duration: float, volume: float) -> AudioStream:
+	# 通过AudioStreamGenerator程序化生成正弦波音效
+	# 使用二次方包络(envelope^2)让声音有自然的衰减尾音
 	var stream = AudioStreamGenerator.new()
 	stream.mix_rate = SAMPLE_RATE
 	stream.buffer_length = duration + 0.02
@@ -65,7 +70,7 @@ func _generate_tone(frequency: float, duration: float, volume: float) -> AudioSt
 	for i in range(sample_count):
 		var t = float(i) / SAMPLE_RATE
 		var envelope = 1.0 - (t / duration)
-		envelope = envelope * envelope
+		envelope = envelope * envelope  # 二次方衰减，听感更平滑
 		var value = sin(t * TAU * frequency) * envelope * volume
 		playback.push_frame(Vector2(value, value))
 

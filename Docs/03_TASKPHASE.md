@@ -1,7 +1,7 @@
 # Task Phase — Potato Survivor (Godot 4.x 2D)
 
-> **版本**: 1.2 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
-> 当前阶段 Phase 5
+> **版本**: 1.3 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
+> 当前阶段 Phase 6 (已完成) → 下一阶段 Phase 7
 > 本文档是 AI Agent 实现游戏的开发顺序。
 
 ## 1. AI Agent 开发路线图
@@ -102,10 +102,10 @@
 目标：补齐已设计但未实现的核心功能。
 
 **步骤：**
-- [ ] 1. 商店解锁筛选 — `SaveManager` 已有 `is_weapon_unlocked()` / `is_item_unlocked()` 和初始化解锁列表（`unlocked_weapons: ["stick"]`, `unlocked_items: []`），但 `shop_ui.gd:_generate_shop()` 未过滤。在生成商店物品和武器时，调用 `SaveManager.is_item_unlocked()` / `SaveManager.is_weapon_unlocked()` 过滤未解锁项。同时添加武器/道具解锁逻辑：首次通关/达到特定波次时解锁新武器，购买特定道具后解锁关联道具。
-- [ ] 2. 精英敌人属性增益 — `enemy_base.gd:set_elite()` 仅改变颜色和尺寸，无属性加成。精英敌人应获得：HP ×2、伤害 ×1.5、移动速度 ×1.2、体型 +20%。在 `set_elite()` 中直接修改 `stats` 的属性值，或在 `EnemyStats.init_from_data()` 中接收 `is_elite` 参数。精英掉落材料已有 3 倍加成，保留。
-- [ ] 3. 更换美术资源 - 临时资源路径 res://assets/TestTexture/ 尺寸大小需要重新调整，直接调整缩放即可
-- [ ] 4. 给每一行代码增加中文注释
+- [√] 1. 商店解锁筛选 — `SaveManager` 已有 `is_weapon_unlocked()` / `is_item_unlocked()` 和初始化解锁列表（`unlocked_weapons: ["stick"]`, `unlocked_items: []`），但 `shop_ui.gd:_generate_shop()` 未过滤。在生成商店物品和武器时，调用 `SaveManager.is_item_unlocked()` / `SaveManager.is_weapon_unlocked()` 过滤未解锁项。同时添加武器/道具解锁逻辑：首次通关/达到特定波次时解锁新武器，购买特定道具后解锁关联道具。
+- [√] 2. 精英敌人属性增益 — `enemy_base.gd:set_elite()` 仅改变颜色和尺寸，无属性加成。精英敌人应获得：HP ×2、伤害 ×1.5、移动速度 ×1.2、体型 +20%。在 `set_elite()` 中直接修改 `stats` 的属性值，或在 `EnemyStats.init_from_data()` 中接收 `is_elite` 参数。精英掉落材料已有 3 倍加成，保留。
+- [√] 3. 更换美术资源 - 临时资源路径 res://assets/TestTexture/ 尺寸大小需要重新调整，直接调整缩放即可
+- [√] 4. 给每一行代码增加中文注释
 
 **验证标准**：商店只显示已解锁的物品和武器；精英敌人明显比普通敌人更强。
 

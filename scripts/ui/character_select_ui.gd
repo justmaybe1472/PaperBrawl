@@ -6,7 +6,7 @@ var _selected_index: int = 0
 func _ready():
 	for id in DataManager.characters:
 		_character_ids.append(id)
-	_character_ids.sort()
+	_character_ids.sort()  # 排序保证角色列表顺序一致
 	_build_ui()
 
 func _build_ui():
@@ -22,7 +22,7 @@ func _build_ui():
 	title.add_theme_color_override("font_color", Color.WHITE)
 	add_child(title)
 
-	# Character grid - 4 columns
+	# Character grid - 4 columns, 根据角色数量自动换行
 	var cols = 4
 	var start_x = 80
 	var start_y = 100
@@ -71,7 +71,7 @@ func _create_character_card(char_data: CharacterData, x: float, y: float, w: flo
 	panel.name = "Card_" + char_data.id
 	var style = StyleBoxFlat.new()
 	if not unlocked:
-		style.bg_color = Color(0.15, 0.15, 0.15, 0.8)
+		style.bg_color = Color(0.15, 0.15, 0.15, 0.8)  # 锁定角色用暗色面板区分
 	else:
 		style.bg_color = Color(0.1, 0.15, 0.2, 0.9)
 	panel.add_theme_stylebox_override("panel", style)
@@ -83,13 +83,13 @@ func _create_character_card(char_data: CharacterData, x: float, y: float, w: flo
 		name_label.text += " [锁定]"
 	name_label.position = Vector2(10, 5)
 	name_label.add_theme_font_size_override("font_size", 18)
-	name_label.add_theme_color_override("font_color", Color.WHITE if unlocked else Color(0.4, 0.4, 0.4))
+	name_label.add_theme_color_override("font_color", Color.WHITE if unlocked else Color(0.4, 0.4, 0.4))  # 锁定角色名称灰色
 	panel.add_child(name_label)
 
 	var desc_label = Label.new()
 	desc_label.text = char_data.description
 	if not unlocked:
-		desc_label.text = "解锁条件: " + char_data.unlock_condition
+		desc_label.text = "解锁条件: " + char_data.unlock_condition  # 锁定角色显示解锁条件而非描述
 	desc_label.position = Vector2(10, 32)
 	desc_label.add_theme_font_size_override("font_size", 12)
 	desc_label.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
@@ -103,7 +103,7 @@ func _create_character_card(char_data: CharacterData, x: float, y: float, w: flo
 	wpn_label.add_theme_color_override("font_color", Color.CYAN)
 	panel.add_child(wpn_label)
 
-	# Show key stats
+	# Show key stats - 仅显示非默认属性，帮助玩家快速比较角色差异
 	var stats_text = _get_key_stats_text(char_data)
 	var stats_label = Label.new()
 	stats_label.text = stats_text
@@ -113,7 +113,7 @@ func _create_character_card(char_data: CharacterData, x: float, y: float, w: flo
 	panel.add_child(stats_label)
 
 	if unlocked:
-		panel.gui_input.connect(_on_card_clicked.bind(index))
+		panel.gui_input.connect(_on_card_clicked.bind(index))  # 仅已解锁角色可点击
 
 func _get_weapon_name(weapon_id: String) -> String:
 	var wpn = DataManager.get_weapon(weapon_id)
@@ -124,6 +124,7 @@ func _get_weapon_name(weapon_id: String) -> String:
 func _get_key_stats_text(char_data: CharacterData) -> String:
 	var stats = char_data.base_stats
 	var lines: Array[String] = []
+	# 只显示非默认的属性值，精简信息展示
 	if stats.get("max_hp", 12) != 12:
 		lines.append("HP: %d" % int(stats["max_hp"]))
 	if stats.get("damage_pct", 0) != 0:
@@ -147,9 +148,10 @@ func _get_key_stats_text(char_data: CharacterData) -> String:
 func _on_card_clicked(event: InputEvent, index: int):
 	if event is InputEventMouseButton and event.pressed:
 		_selected_index = index
-		_update_selection()
+		_update_selection()  # 高亮当前选中卡片
 
 func _update_selection():
+	# 更新所有卡片颜色：选中卡片蓝色高亮，锁定卡片暗灰，其余默认
 	for i in range(_character_ids.size()):
 		var card = find_child("Card_" + _character_ids[i], true, false)
 		if card == null:
@@ -157,7 +159,7 @@ func _update_selection():
 		var style = card.get_theme_stylebox("panel", "Panel")
 		if style is StyleBoxFlat:
 			if i == _selected_index and SaveManager.is_character_unlocked(_character_ids[i]):
-				style.bg_color = Color(0.2, 0.35, 0.6, 0.95)
+				style.bg_color = Color(0.2, 0.35, 0.6, 0.95)  # 选中高亮
 			elif not SaveManager.is_character_unlocked(_character_ids[i]):
 				style.bg_color = Color(0.15, 0.15, 0.15, 0.8)
 			else:
@@ -166,7 +168,7 @@ func _update_selection():
 func _on_confirm():
 	var char_id = _character_ids[_selected_index]
 	if not SaveManager.is_character_unlocked(char_id):
-		return
+		return  # 锁定角色不可确认
 	GameManager.selected_character_id = char_id
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 

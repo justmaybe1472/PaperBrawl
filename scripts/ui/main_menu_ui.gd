@@ -42,7 +42,7 @@ func _build_ui():
 	diff_label.name = "DiffLabel"
 	add_child(diff_label)
 
-	# Difficulty buttons
+	# Difficulty buttons - 左右按钮循环切换难度
 	var diff_left = Button.new()
 	diff_left.text = "<"
 	diff_left.position = Vector2(470, 345)
@@ -65,7 +65,7 @@ func _build_ui():
 	quit_btn.pressed.connect(_on_quit_pressed)
 	add_child(quit_btn)
 
-	# Stats display
+	# Stats display - 展示玩家累计数据，增强成就感
 	var stats_label = Label.new()
 	stats_label.text = _get_stats_text()
 	stats_label.position = Vector2(400, 500)
@@ -75,6 +75,7 @@ func _build_ui():
 	add_child(stats_label)
 
 func _on_start_pressed():
+	# 先进入角色选择，而非直接开始游戏
 	var tree = get_tree()
 	if tree:
 		tree.change_scene_to_file("res://scenes/ui/character_select.tscn")
@@ -85,6 +86,7 @@ func _on_diff_left():
 		_update_diff_label()
 
 func _on_diff_right():
+	# 仅当有更高难度已解锁时才允许切换
 	var max_diff = 0
 	for d in SaveManager.save_data["difficulty_levels"]:
 		if d > max_diff:

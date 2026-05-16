@@ -7,6 +7,7 @@ func _ready():
 	hide()
 
 func _build_ui():
+	# 半透明遮罩让玩家知道游戏被暂停但世界仍在
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.6)
 	overlay.size = Vector2(1280, 720)
@@ -52,14 +53,14 @@ func _on_game_paused():
 	show()
 
 func _on_game_resumed():
-	hide()
+	hide()  # 隐藏而非销毁，保持按钮引用有效
 
 func _on_resume_pressed():
 	EventBus.game_resumed.emit()
-	GameManager.change_state(GameManager.GameState.WAVE_ACTIVE)
+	GameManager.change_state(GameManager.GameState.WAVE_ACTIVE)  # 恢复波次活跃状态
 
 func _on_restart_pressed():
-	EventBus.game_resumed.emit()
+	EventBus.game_resumed.emit()  # 先发送恢复事件清理暂停状态
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_quit_pressed():

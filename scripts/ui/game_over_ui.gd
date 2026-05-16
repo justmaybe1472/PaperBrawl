@@ -5,10 +5,11 @@ func _ready():
 	hide()
 
 func _on_game_over(wave_reached: int, materials_earned: int):
-	_build_ui(wave_reached, materials_earned)
+	_build_ui(wave_reached, materials_earned)  # 每次触发都重建UI，保证数据最新
 	show()
 
 func _build_ui(wave_reached: int, materials_earned: int):
+	# 清除旧UI（支持重复触发）
 	for child in get_children():
 		child.queue_free()
 
@@ -20,6 +21,7 @@ func _build_ui(wave_reached: int, materials_earned: int):
 	panel.add_theme_stylebox_override("panel", panel_style)
 	add_child(panel)
 
+	# 根据输赢显示不同标题和颜色
 	var title = Label.new()
 	title.text = "通关！" if GameManager.is_victory else "游戏结束"
 	title.position = Vector2(150, 30)
