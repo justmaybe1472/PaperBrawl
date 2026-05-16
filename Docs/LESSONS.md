@@ -85,7 +85,12 @@
 - **修复**：在 `Player` 中新增 `_item_stack_counts` 字典追踪每道具购买次数，`can_purchase_item()` 方法检查上限，`shop_ui.gd` 购买前调用检查
 - **预防**：Resource 类中的约束字段（max_stack、max_hp_modifier 等）必须在购买/装备/初始化逻辑中读取并校验
 
----
+### [2026-05-16] `load()` 加载 PNG 返回 `CompressedTexture2D` 而非 `ImageTexture`
+- **场景**：`placeholder_sprites.gd:load_test_texture()` 声明返回类型为 `ImageTexture`
+- **错误**：Godot 导入的 PNG 纹理类型为 `CompressedTexture2D`，运行时 `load()` 返回类型与函数签名不匹配，触发引擎报错并崩溃
+- **根因**：`ImageTexture` 仅用于运行时 `Image.create_from_image()` 程序化创建的纹理；从磁盘 `load()` 的资源使用引擎导入管线，返回 `CompressedTexture2D`
+- **修复**：返回类型改为基类 `Texture2D`
+- **预防**：`load()` 加载外部图片资源时，返回类型应声明为 `Texture2D`；`ImageTexture` 仅适用于代码生成的纹理
 
 ## 常见防空指南（给玩家/开发者）
 

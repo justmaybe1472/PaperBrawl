@@ -32,7 +32,7 @@ func _ready():
 
 	_initialize_from_data()
 	# 优先使用 TestTexture，回退到占位图形
-	PlaceholderSprites.apply_test_texture(sprite, "Player_1.png", 32.0)
+	PlaceholderSprites.apply_test_texture(sprite, "Player_1.png", 64.0)
 
 func _initialize_from_data():
 	var char_data = DataManager.get_character(GameManager.selected_character_id)

@@ -4,7 +4,7 @@ class_name WeaponRanged
 
 func _create_visual():
 	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_1.png", 16.0)
+	PlaceholderSprites.apply_test_texture(sprite, "Weapon_1.png", 32.0)
 	# 远程武器放置在玩家前方偏上，视觉上区分于近战武器
 	sprite.position = Vector2(25, -8)
 	add_child(sprite)

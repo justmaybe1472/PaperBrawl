@@ -13,7 +13,7 @@ func _ready():
 
 func _create_visual():
 	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_3.png", 20.0)
+	PlaceholderSprites.apply_test_texture(sprite, "Weapon_3.png", 40.0)
 	# 近战武器放置在玩家前方30像素处，让碰撞区域覆盖攻击范围
 	sprite.position = Vector2(30, 0)
 	add_child(sprite)

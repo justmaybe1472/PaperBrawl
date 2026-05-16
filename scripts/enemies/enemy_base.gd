@@ -64,9 +64,9 @@ func init(enemy_data: EnemyData, wave_number: int):
 	($AIStateMachine as EnemyAI).enemy_data = enemy_data
 
 	# 根据敌人类型分配不同的体型（坦克/Boss 更大）和测试期占位贴图
-	var size: float = 28.0
+	var size: float = 56.0
 	if type == "tank" or type == "boss":
-		size = 40.0
+		size = 80.0
 	if type == "elite" or type == "boss":
 		size *= 1.15
 	# 按敌人类型映射测试期占位贴图

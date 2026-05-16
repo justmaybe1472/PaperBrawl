@@ -5,7 +5,7 @@ const TEX_PATH = "res://assets/TestTexture/"
 const TEX_SIZE = 216.0  # TestTexture 统一尺寸，所有缩放基于此基准计算
 
 # 加载 TestTexture 并根据目标尺寸返回缩放值
-static func load_test_texture(file_name: String) -> ImageTexture:
+static func load_test_texture(file_name: String) -> Texture2D:
 	var path = TEX_PATH + file_name
 	if ResourceLoader.exists(path):
 		var res = load(path)

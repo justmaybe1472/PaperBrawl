@@ -11,7 +11,7 @@ const MINE_SCRIPT = preload("res://scripts/projectiles/mine_deploy.gd")
 
 func _create_visual():
 	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_4.png", 14.0)
+	PlaceholderSprites.apply_test_texture(sprite, "Weapon_4.png", 28.0)
 	# 工程武器放置在玩家左侧，与其他武器方向区分（近战右上、远程左上、元素左下）
 	sprite.position = Vector2(-25, 0)
 	add_child(sprite)

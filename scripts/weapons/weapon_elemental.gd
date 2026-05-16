@@ -4,7 +4,7 @@ class_name WeaponElemental
 
 func _create_visual():
 	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_2.png", 16.0)
+	PlaceholderSprites.apply_test_texture(sprite, "Weapon_2.png", 32.0)
 	# 元素武器放置在玩家前方偏下，与远程武器形成视觉对称
 	sprite.position = Vector2(25, 8)
 	add_child(sprite)
