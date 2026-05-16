@@ -80,11 +80,15 @@ func take_damage(amount: int):
 	if is_dead:
 		return
 	stats.take_damage(amount)
+	if not is_instance_valid(health_bar):
+		return
 	health_bar.value = stats.current_hp
 
+	if is_dead:
+		return
 	sprite.modulate = Color.RED
 	await get_tree().create_timer(0.1).timeout
-	if not is_dead:
+	if not is_dead and is_instance_valid(sprite):
 		sprite.modulate = Color.WHITE
 
 	if stats.is_dead():
@@ -99,7 +103,7 @@ func _die():
 	is_dead = true
 	_spawn_drops()
 	EventBus.enemy_killed.emit(enemy_id, global_position, _is_elite)
-	queue_free()
+	ObjectPool.return_enemy(self, enemy_id)
 
 func _spawn_drops():
 	var wave_config = DataManager.get_wave_config(GameManager.current_wave)
@@ -120,11 +124,12 @@ func _spawn_drops():
 		amount *= 3
 	amount = max(1, int(amount * multiplier))
 
-	var pickup_scene = load("res://scenes/entities/pickup.tscn")
 	for i in range(amount):
-		var pickup = pickup_scene.instantiate()
+		var pickup = ObjectPool.get_pickup()
 		pickup.global_position = global_position + Vector2(randf_range(-15, 15), randf_range(-15, 15))
-		pickup.value = 1
+		pickup.set("value", 1)
+		pickup.set("attracted", false)
+		pickup.set("player_ref", null)
 
 		var container = get_tree().get_first_node_in_group("pickups_container")
 		if container:

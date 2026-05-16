@@ -6,12 +6,6 @@ var shoot_interval: float = 2.0
 const PREFERRED_DISTANCE: float = 250.0
 const TOO_CLOSE: float = 150.0
 
-var projectile_scene: PackedScene
-
-func _ready():
-	super._ready()
-	projectile_scene = preload("res://scenes/entities/enemy_projectile.tscn")
-
 func get_move_direction() -> Vector2:
 	if player_ref == null:
 		_find_player()
@@ -43,12 +37,13 @@ func _shoot(direction: Vector2):
 	var owner_body = get_owner_body()
 	if owner_body == null:
 		return
-	var proj = projectile_scene.instantiate()
+	var proj = ObjectPool.get_enemy_projectile()
 	proj.global_position = owner_body.global_position
-	proj.direction = direction
+	proj.set("direction", direction)
+	proj.set("lifetime", 5.0)
 
 	var dmg: int = 5
 	if enemy_data:
 		dmg = int(enemy_data.base_damage)
-	proj.damage = dmg
+	proj.set("damage", dmg)
 	get_tree().root.add_child(proj)

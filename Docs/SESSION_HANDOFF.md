@@ -19,6 +19,7 @@
 开发中如犯错或发现 Bug，修复后立即追加到 LESSONS.md。
 
 当前项目路径: D:\GodotGame\test-1
+文件路径：D:\GodotGame\test-1\Docs
 ```
 
 ---

@@ -4,12 +4,6 @@ class_name EnemyAISummoner
 var summon_timer: float = 0.0
 var summon_interval: float = 3.0
 
-var minion_scene: PackedScene
-
-func _ready():
-	super._ready()
-	minion_scene = preload("res://scenes/entities/enemy_base.tscn")
-
 func get_move_direction() -> Vector2:
 	summon_timer -= get_process_delta_time()
 	if summon_timer <= 0.0:
@@ -26,7 +20,7 @@ func _summon_minion():
 	if minion_data == null:
 		return
 
-	var minion = minion_scene.instantiate()
+	var minion = ObjectPool.get_enemy("basic_melee")
 	var angle = randf() * TAU
 	minion.global_position = owner_body.global_position + Vector2(cos(angle), sin(angle)) * 50.0
 

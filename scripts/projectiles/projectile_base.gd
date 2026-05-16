@@ -14,20 +14,13 @@ var attacker_stats: StatsComponent
 
 func _ready():
 	body_entered.connect(_on_body_entered)
-	var sprite = Sprite2D.new()
-	sprite.texture = PlaceholderSprites.make_square_texture(Color.YELLOW, 8.0)
-	add_child(sprite)
-	var shape = CollisionShape2D.new()
-	shape.shape = CircleShape2D.new()
-	(shape.shape as CircleShape2D).radius = 4.0
-	add_child(shape)
 	collision_layer = 3
 	collision_mask = 2
 
 func _process(delta):
 	lifetime -= delta
 	if lifetime <= 0.0:
-		queue_free()
+		ObjectPool.return_projectile(self)
 		return
 	global_position += direction * speed * delta
 
@@ -59,9 +52,9 @@ func _on_body_entered(body: Node2D):
 		if nearby:
 			direction = (nearby.global_position - global_position).normalized()
 		else:
-			queue_free()
+			ObjectPool.return_projectile(self)
 	else:
-		queue_free()
+		ObjectPool.return_projectile(self)
 
 func _find_nearest_enemy(pos: Vector2) -> Node2D:
 	var nearest: Node2D = null

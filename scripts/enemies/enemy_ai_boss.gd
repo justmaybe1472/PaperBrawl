@@ -21,14 +21,6 @@ const SHOOT_INTERVAL: float = 1.5
 const CHARGE_INTERVAL: float = 3.0
 const SUMMON_INTERVAL: float = 4.0
 
-var projectile_scene: PackedScene
-var minion_scene: PackedScene
-
-func _ready():
-	super._ready()
-	projectile_scene = preload("res://scenes/entities/enemy_projectile.tscn")
-	minion_scene = preload("res://scenes/entities/enemy_base.tscn")
-
 func get_move_direction() -> Vector2:
 	if player_ref == null:
 		_find_player()
@@ -125,10 +117,11 @@ func _shoot_spread(direction: Vector2):
 	for i in range(3):
 		var angle_offset = (i - 1) * 0.3
 		var dir = direction.rotated(angle_offset)
-		var proj = projectile_scene.instantiate()
+		var proj = ObjectPool.get_enemy_projectile()
 		proj.global_position = owner_body.global_position
-		proj.direction = dir
-		proj.damage = dmg
+		proj.set("direction", dir)
+		proj.set("lifetime", 5.0)
+		proj.set("damage", dmg)
 		get_tree().root.add_child(proj)
 
 func _spawn_minions(owner_body: CharacterBody2D):
@@ -139,7 +132,7 @@ func _spawn_minions(owner_body: CharacterBody2D):
 		return
 
 	for i in range(2):
-		var minion = minion_scene.instantiate()
+		var minion = ObjectPool.get_enemy(minion_data.id)
 		var angle = randf() * TAU
 		minion.global_position = owner_body.global_position + Vector2(cos(angle), sin(angle)) * 60.0
 		var container = get_tree().get_first_node_in_group("enemies_container")

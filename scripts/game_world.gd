@@ -9,17 +9,29 @@ func _ready():
 	_create_floor()
 	_create_boundaries()
 	_spawn_player()
+	_create_damage_numbers()
+
+func _create_damage_numbers():
+	var canvas = CanvasLayer.new()
+	canvas.name = "DamageNumberLayer"
+	canvas.set_script(load("res://scripts/systems/damage_number_manager.gd"))
+	add_child(canvas)
+
+	var audio = Node.new()
+	audio.name = "AudioManager"
+	audio.set_script(load("res://scripts/systems/audio_manager.gd"))
+	add_child(audio)
 
 func _create_floor():
 	var image = Image.create(1920, 1080, false, Image.FORMAT_RGBA8)
 	image.fill(Color(0.18, 0.18, 0.18, 1.0))
 	var texture = ImageTexture.create_from_image(image)
-	var floor = Sprite2D.new()
-	floor.texture = texture
-	floor.centered = true
-	floor.position = Vector2(960, 540)
-	floor.z_index = -10
-	add_child(floor)
+	var floor_sprite = Sprite2D.new()
+	floor_sprite.texture = texture
+	floor_sprite.centered = true
+	floor_sprite.position = Vector2(960, 540)
+	floor_sprite.z_index = -10
+	add_child(floor_sprite)
 
 func _create_boundaries():
 	var wall_thickness = 20.0

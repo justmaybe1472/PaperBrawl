@@ -1,12 +1,6 @@
 extends WeaponBase
 class_name WeaponElemental
 
-var projectile_scene: PackedScene
-
-func _ready():
-	super._ready()
-	projectile_scene = load("res://scenes/entities/projectile_base.tscn")
-
 func attack():
 	var target_dir = _get_target_direction()
 	var center_pos = global_position
@@ -43,7 +37,7 @@ func _find_nearest_enemy() -> Node2D:
 	return nearest
 
 func _spawn_projectile(pos: Vector2, dir: Vector2):
-	var proj = projectile_scene.instantiate()
+	var proj = ObjectPool.get_projectile()
 	proj.global_position = pos
 	proj.direction = dir
 	proj.speed = 280.0

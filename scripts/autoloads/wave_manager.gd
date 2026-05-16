@@ -9,10 +9,7 @@ var spawn_interval: float = 1.0
 var wave_active: bool = false
 var current_wave_config: WaveConfig
 
-var enemy_scene: PackedScene
-
 func _ready():
-	enemy_scene = preload("res://scenes/entities/enemy_base.tscn")
 	EventBus.wave_started.connect(_on_wave_started)
 	EventBus.enemy_killed.connect(_on_enemy_killed)
 
@@ -78,7 +75,7 @@ func _spawn_enemy():
 		push_error("WaveManager: No enemy data found")
 		return
 
-	var enemy = enemy_scene.instantiate()
+	var enemy = ObjectPool.get_enemy(type_id)
 
 	var player = get_tree().get_first_node_in_group("player")
 	var spawn_center = player.global_position if player else Vector2(960, 540)
@@ -128,7 +125,7 @@ func _spawn_boss():
 		push_error("WaveManager: No boss enemy data found")
 		return
 
-	var boss = enemy_scene.instantiate()
+	var boss = ObjectPool.get_enemy("boss")
 	var player = get_tree().get_first_node_in_group("player")
 	var spawn_center = player.global_position if player else Vector2(960, 540)
 	boss.global_position = spawn_center + Vector2(0, -400)
@@ -149,4 +146,8 @@ func _clear_remaining_enemies():
 	var container = get_tree().get_first_node_in_group("enemies_container")
 	if container:
 		for child in container.get_children():
-			child.queue_free()
+			if child is EnemyBase:
+				child.is_dead = true
+				ObjectPool.return_enemy(child, child.enemy_id)
+			else:
+				child.queue_free()

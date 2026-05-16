@@ -60,10 +60,10 @@ func _check_enemy_contact():
 	for body in overlapping:
 		if body is EnemyBase:
 			var damage = int(body.stats.get_stat("base_damage"))
-			_apply_damage(damage)
+			apply_damage(damage)
 			break
 
-func _apply_damage(amount: int):
+func apply_damage(amount: int):
 	if is_invincible:
 		return
 	var new_hp = stats.take_damage(amount)
