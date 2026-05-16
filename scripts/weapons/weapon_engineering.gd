@@ -6,8 +6,11 @@ var deployed_nodes: Array = []
 const TURRET_SCRIPT = preload("res://scripts/projectiles/turret_deploy.gd")
 const MINE_SCRIPT = preload("res://scripts/projectiles/mine_deploy.gd")
 
-func _ready():
-	super._ready()
+func _create_visual():
+	var sprite = Sprite2D.new()
+	sprite.texture = PlaceholderSprites.make_square_texture(Color(0.2, 0.8, 0.6), 14)
+	sprite.position = Vector2(-25, 0)
+	add_child(sprite)
 
 func attack():
 	var player = get_tree().get_first_node_in_group("player")

@@ -66,7 +66,7 @@ func _generate_tone(frequency: float, duration: float, volume: float) -> AudioSt
 		var t = float(i) / SAMPLE_RATE
 		var envelope = 1.0 - (t / duration)
 		envelope = envelope * envelope
-		var value = sin(T * TAU * frequency) * envelope * volume
+		var value = sin(t * TAU * frequency) * envelope * volume
 		playback.push_frame(Vector2(value, value))
 
 	player.stop()
@@ -93,7 +93,7 @@ func _generate_tone_burst(frequencies: Array, note_duration: float, volume: floa
 		var note_t = t - note_idx * note_duration
 		var envelope = 1.0 - (note_t / note_duration)
 		envelope = envelope * envelope
-		var value = sin(T * TAU * frequencies[note_idx]) * envelope * volume
+		var value = sin(t * TAU * frequencies[note_idx]) * envelope * volume
 		playback.push_frame(Vector2(value, value))
 
 	player.stop()
@@ -129,8 +129,8 @@ func _generate_music_loop() -> AudioStream:
 		var t = float(i) / SAMPLE_RATE
 		var beat = int(t / (duration / 4.0)) % 4
 		var beat_t = fmod(t, duration / 4.0)
-		var value = sin(T * TAU * bass_notes[beat] * 2.0) * 0.08
-		value += sin(T * TAU * bass_notes[beat]) * 0.06 * (1.0 - beat_t / (duration / 4.0))
+		var value = sin(t * TAU * bass_notes[beat] * 2.0) * 0.08
+		value += sin(t * TAU * bass_notes[beat]) * 0.06 * (1.0 - beat_t / (duration / 4.0))
 		playback.push_frame(Vector2(value, value))
 
 	player.stop()

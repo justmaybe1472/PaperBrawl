@@ -1,7 +1,17 @@
 extends WeaponBase
 class_name WeaponElemental
 
+func _create_visual():
+	var sprite = Sprite2D.new()
+	sprite.texture = PlaceholderSprites.make_triangle_texture(Color(0.8, 0.2, 0.8), 16)
+	sprite.position = Vector2(25, 8)
+	add_child(sprite)
+
 func attack():
+	if player_stats == null:
+		_try_reacquire_stats()
+		if player_stats == null:
+			return
 	var target_dir = _get_target_direction()
 	var center_pos = global_position
 

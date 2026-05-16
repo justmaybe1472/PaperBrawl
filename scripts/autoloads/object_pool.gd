@@ -36,7 +36,7 @@ func get_enemy(enemy_type: String) -> EnemyBase:
 	enemy.visible = true
 	enemy.set_process(true)
 	enemy.set_physics_process(true)
-	enemy.process_mode = Node.PROCESS_MODE_INHERIT
+	enemy.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
 	return enemy
 
 func return_enemy(enemy: EnemyBase, enemy_type: String):
@@ -45,9 +45,9 @@ func return_enemy(enemy: EnemyBase, enemy_type: String):
 	enemy.visible = false
 	enemy.set_process(false)
 	enemy.set_physics_process(false)
-	enemy.process_mode = Node.PROCESS_MODE_DISABLED
+	enemy.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 	if enemy.get_parent():
-		enemy.get_parent().remove_child(enemy)
+		enemy.get_parent().call_deferred("remove_child", enemy)
 	if not _enemy_pools.has(enemy_type):
 		_enemy_pools[enemy_type] = []
 	_enemy_pools[enemy_type].append(enemy)
@@ -59,14 +59,13 @@ func get_projectile() -> PlayerProjectile:
 		_total_reused += 1
 	else:
 		proj = _projectile_scene.instantiate()
-		# Initialize visuals once for new projectiles
 		_init_projectile_visuals(proj)
 		_total_allocated += 1
 
 	proj.visible = true
 	proj.set_process(true)
-	proj.process_mode = Node.PROCESS_MODE_INHERIT
-	proj.monitoring = true
+	proj.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
+	proj.set_deferred("monitoring", true)
 	proj.lifetime = 3.0
 	return proj
 
@@ -75,10 +74,10 @@ func return_projectile(proj: PlayerProjectile):
 		return
 	proj.visible = false
 	proj.set_process(false)
-	proj.process_mode = Node.PROCESS_MODE_DISABLED
-	proj.monitoring = false
+	proj.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+	proj.set_deferred("monitoring", false)
 	if proj.get_parent():
-		proj.get_parent().remove_child(proj)
+		proj.get_parent().call_deferred("remove_child", proj)
 	_projectile_pool.append(proj)
 
 func get_pickup() -> Area2D:
@@ -93,8 +92,8 @@ func get_pickup() -> Area2D:
 
 	pickup.visible = true
 	pickup.set_process(true)
-	pickup.process_mode = Node.PROCESS_MODE_INHERIT
-	pickup.monitoring = true
+	pickup.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
+	pickup.set_deferred("monitoring", true)
 	return pickup
 
 func return_pickup(pickup: Area2D):
@@ -102,10 +101,10 @@ func return_pickup(pickup: Area2D):
 		return
 	pickup.visible = false
 	pickup.set_process(false)
-	pickup.process_mode = Node.PROCESS_MODE_DISABLED
-	pickup.monitoring = false
+	pickup.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+	pickup.set_deferred("monitoring", false)
 	if pickup.get_parent():
-		pickup.get_parent().remove_child(pickup)
+		pickup.get_parent().call_deferred("remove_child", pickup)
 	_pickup_pool.append(pickup)
 
 func get_enemy_projectile() -> Area2D:
@@ -120,8 +119,8 @@ func get_enemy_projectile() -> Area2D:
 
 	proj.visible = true
 	proj.set_process(true)
-	proj.process_mode = Node.PROCESS_MODE_INHERIT
-	proj.monitoring = true
+	proj.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
+	proj.set_deferred("monitoring", true)
 	return proj
 
 func return_enemy_projectile(proj: Area2D):
@@ -129,10 +128,10 @@ func return_enemy_projectile(proj: Area2D):
 		return
 	proj.visible = false
 	proj.set_process(false)
-	proj.process_mode = Node.PROCESS_MODE_DISABLED
-	proj.monitoring = false
+	proj.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+	proj.set_deferred("monitoring", false)
 	if proj.get_parent():
-		proj.get_parent().remove_child(proj)
+		proj.get_parent().call_deferred("remove_child", proj)
 	_enemy_projectile_pool.append(proj)
 
 func _init_enemy_projectile_visuals(proj: Area2D):

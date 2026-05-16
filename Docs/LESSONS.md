@@ -42,6 +42,20 @@
 - **修复**：重命名为 `apply_damage()`
 - **预防**：任何需要被其他脚本调用的方法不得以 `_` 开头
 
+### [2026-05-16] 对象池归还时在物理回调中禁用碰撞导致报错
+- **场景**：`ObjectPool.return_pickup()` 在 `_on_body_entered` 物理回调中被调用
+- **错误**：`monitoring = false` 在物理回调中禁用 CollisionObject，Godot 不允许此操作
+- **根因**：`_collect()` → `ObjectPool.return_pickup()` 在物理信号链中直接设置 `monitoring = false`
+- **修复**：所有 return_* 方法改用 `set_deferred("monitoring", false)` 延迟到空闲帧禁用
+- **预防**：对象池归还方法中涉及 CollisionObject 属性变更（monitoring、process_mode）时，始终使用 `set_deferred`
+
+### [2026-05-16] 正弦波生成中使用未定义标识符 `T` 而非时间变量 `t`
+- **场景**：`audio_manager.gd` 中程序化生成音效的正弦波公式
+- **错误**：`sin(T * TAU * frequency)` 中 `T` 不是 Godot 内置常量（Godot 只有 `TAU`、`PI`），实际应使用局部变量 `t`
+- **根因**：手误将小写 `t`（时间变量）写成了大写 `T`，Godot 中 `T` 未定义
+- **修复**：全局替换 `T * TAU` → `t * TAU`
+- **预防**：任何数学公式中的变量名区分大小写，`t` 是局部变量，`TAU` 是内置常量（= 2π），不要混用
+
 ### [2026-05-16] 波次清理时使用 queue_free 绕过对象池
 - **场景**：`wave_manager._clear_remaining_enemies()` 在波次结束时清理残余敌人
 - **错误**：使用 `queue_free()` 直接销毁节点，绕过对象池，导致下一波需要重新分配

@@ -11,7 +11,11 @@ func _ready():
 	if weapon_data == null:
 		push_error("Weapon: No weapon data for id: " + weapon_id)
 		return
+	_create_visual()
 	_setup_cooldown()
+
+func _create_visual():
+	pass
 
 func _setup_cooldown():
 	cooldown_timer = Timer.new()
@@ -35,6 +39,11 @@ func _on_cooldown_ready():
 	attack()
 	cooldown_timer.wait_time = get_effective_cooldown()
 	cooldown_timer.start()
+
+func _try_reacquire_stats():
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_node("StatsComponent"):
+		player_stats = player.get_node("StatsComponent")
 
 func attack():
 	pass

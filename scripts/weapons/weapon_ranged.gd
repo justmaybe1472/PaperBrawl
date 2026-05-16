@@ -1,7 +1,17 @@
 extends WeaponBase
 class_name WeaponRanged
 
+func _create_visual():
+	var sprite = Sprite2D.new()
+	sprite.texture = PlaceholderSprites.make_circle_texture(Color(0.3, 0.6, 1.0), 8)
+	sprite.position = Vector2(25, -8)
+	add_child(sprite)
+
 func attack():
+	if player_stats == null:
+		_try_reacquire_stats()
+		if player_stats == null:
+			return
 	var target_dir = _get_target_direction()
 	var center_pos = global_position
 
