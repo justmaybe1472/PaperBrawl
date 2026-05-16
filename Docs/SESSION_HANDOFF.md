@@ -10,13 +10,15 @@
 
 ```
 你是 Godot 4.x 游戏开发者。请按顺序阅读以下文件：
-1. GDD.md — 游戏规则
-2. ARCHITECTURE.md — 技术架构
-3. TASKPHASE.md — 开发进度（注意已勾选和未勾选的条目）
+1. LESSONS.md — 历史踩坑记录，注意不要重犯
+2. GDD.md — 游戏规则
+3. ARCHITECTURE.md — 技术架构
+4. TASKPHASE.md — 开发进度（注意已勾选和未勾选的条目）
 
 然后继续实现 TASKPHASE.md 中标记为「当前阶段」的未完成任务。
+开发中如犯错或发现 Bug，修复后立即追加到 LESSONS.md。
 
-当前项目路径: E:\WorkBuddySpace\2026-05-15-task-1
+当前项目路径: D:\GodotGame\test-1
 ```
 
 ---
@@ -44,7 +46,7 @@
 
 ## 换对话前必须做的事
 
-1. **更新 TASKPHASE.md**：把已完成步骤的 `[ ]` 改成 `[x]`
+1. **更新 TASKPHASE.md**：把已完成步骤的 `[ ]` 改成 `[√]`
 2. **更新本文档**：修改上方「当前状态摘要」表格
 3. **提交 Git**（如果有）：确保代码已保存
 4. **记录备注**：如果有什么坑或注意事项，写在 TASKPHASE.md 对应步骤的备注栏
@@ -60,5 +62,3 @@
 | GDD.md | ~23KB | 理解游戏规则（WHAT） |
 | ARCHITECTURE.md | ~36KB | 理解代码结构（HOW） |
 | TASKPHASE.md | ~5KB | 知道做到哪了、接下来做什么 |
-
-总计约 **64KB/16000 tokens**，对现代 AI 完全不是问题。
