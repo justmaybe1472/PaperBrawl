@@ -7,6 +7,7 @@ var _refresh_price: int = 0
 
 func _ready():
 	EventBus.shop_opened.connect(_on_shop_opened)
+	EventBus.weapon_slot_full.connect(_on_weapon_slot_full)  # 武器槽满时的UI提示
 	hide()
 
 func _on_shop_opened(wave_number: int):
@@ -271,6 +272,19 @@ func _on_refresh(btn: Button):
 func _on_continue():
 	hide()
 	EventBus.shop_closed.emit()  # 告知 GameManager 回到波次阶段
+
+func _on_weapon_slot_full(_weapon_id: String):
+	# 武器槽已满且类型不匹配，显示短暂提示
+	var warning = Label.new()
+	warning.text = "武器槽已满！只能替换同类型武器"
+	warning.position = Vector2(300, 400)
+	warning.add_theme_font_size_override("font_size", 16)
+	warning.add_theme_color_override("font_color", Color.RED)
+	add_child(warning)
+	# 1.5秒后自动消失
+	var tween = create_tween()
+	tween.tween_property(warning, "modulate:a", 0.0, 1.5).set_delay(1.0)
+	tween.finished.connect(warning.queue_free)
 
 func _update_materials_display():
 	# 购买后刷新材料数量显示

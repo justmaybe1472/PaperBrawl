@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+[ext_resource type="Resource" path="res://resources/items/effects/wave_end_heal_20.tres" id="2_eff"]
 
 [resource]
 script = ExtResource("1_itm")
@@ -11,4 +12,5 @@ base_price = 1
 max_stack = 3
 stat_modifiers = {"max_hp": 3, "hp_regen": 1}
 tags = []
-description = "+3 最大生命值，每秒回复 +1 HP"
+description = "+3 最大生命值，每秒回复 +1 HP，波次结束时回复 20% HP"
+special_effect = ExtResource("2_eff")

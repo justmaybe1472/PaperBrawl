@@ -37,6 +37,10 @@ func _on_wave_started(wave_number: int):
 func _on_enemy_killed(_enemy_id: String, _position: Vector2, _is_elite: bool):
 	# 每击杀一个敌人，存活计数减1，驱动波次结束判定
 	enemies_alive -= 1
+	# 场上无存活敌人时发射全清信号，可用于触发奖励效果
+	# 仅在波次活跃期间且存活数恰好归零时发射，防止清理阶段重复触发
+	if wave_active and enemies_alive == 0:
+		EventBus.all_enemies_cleared.emit()
 
 func _process(delta):
 	# 核心循环：仅在波次活跃且游戏处于战斗状态时运行计时与刷怪逻辑

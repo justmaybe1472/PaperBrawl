@@ -40,5 +40,6 @@ func _on_body_entered(body: Node2D):
 		_collect()
 
 func _collect():
+	EventBus.pickup_collected.emit("material", value)  # 通知外部系统拾取事件
 	GameManager.add_materials(value)  # 累加到本局材料总数
 	ObjectPool.return_pickup(self)  # 回收到对象池，避免频繁创建销毁

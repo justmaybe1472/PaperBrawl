@@ -11,9 +11,9 @@
 ```
 你是 Godot 4.x 游戏开发者。请按顺序阅读以下文件：
 1. LESSONS.md — 历史踩坑记录，注意不要重犯
-2. GDD.md — 游戏规则
-3. ARCHITECTURE.md — 技术架构
-4. TASKPHASE.md — 开发进度（注意已勾选和未勾选的条目）
+2. 01_GDD.md — 游戏规则
+3. 02_ARCHITECTURE.md — 技术架构
+4. 03_TASKPHASE.md — 开发进度（注意已勾选和未勾选的条目）
 
 然后继续实现 TASKPHASE.md 中标记为「当前阶段」的未完成任务。
 开发中如犯错或发现 Bug，修复后立即追加到 LESSONS.md。

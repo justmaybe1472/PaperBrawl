@@ -39,13 +39,15 @@ func add_weapon(weapon_id: String) -> bool:
 			_instantiate_weapon(i, weapon_id, weapon_data)
 			return true
 
-	# 槽位已满，则替换最低品质的武器（价值最低的被淘汰）
-	var lowest_index = _find_lowest_tier_slot()
-	if lowest_index >= 0:
-		_remove_weapon_from_slot(lowest_index)
-		_instantiate_weapon(lowest_index, weapon_id, weapon_data)
+	# 槽位已满：仅当为已拥有武器的更高品阶时才替换旧槽位
+	# 不同类型武器槽满时拒绝购买，防止玩家误操作丢失已有Build
+	if existing_index >= 0:
+		_remove_weapon_from_slot(existing_index)
+		_instantiate_weapon(existing_index, weapon_id, weapon_data)
 		return true
 
+	# 完全不同类型的武器且槽已满 → 拒绝并通知UI
+	EventBus.weapon_slot_full.emit(weapon_id)
 	return false
 
 # 查找同一武器同一品质的槽位——这是合成的前置条件

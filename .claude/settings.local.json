@@ -8,7 +8,8 @@
       "Read(//d//**)",
       "Read(//c/Users/MSI/AppData/Local/Programs/**)",
       "Read(//c/Users/MSI/**)",
-      "Bash(git -C d:/GodotGame/test-1 log --oneline -20)"
+      "Bash(git -C d:/GodotGame/test-1 log --oneline -20)",
+      "Bash(godot --headless --quit)"
     ]
   }
 }

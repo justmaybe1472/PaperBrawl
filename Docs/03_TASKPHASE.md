@@ -1,7 +1,7 @@
 # Task Phase — Potato Survivor (Godot 4.x 2D)
 
-> **版本**: 1.3 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
-> 当前阶段 Phase 6 (已完成) → 下一阶段 Phase 7
+> **版本**: 1.4 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
+> 当前阶段 Phase 7 (已完成) → 全部阶段完成
 > 本文档是 AI Agent 实现游戏的开发顺序。
 
 ## 1. AI Agent 开发路线图
@@ -115,18 +115,18 @@
 目标：完善体验细节，补充交互反馈和 UI 信息展示。
 
 **步骤：**
-- [ ] 1. 道具特殊效果系统 — `ItemData.special_effect` 字段已定义但无代码读取。设计并实现特殊效果接口：
+- [√] 1. 道具特殊效果系统 — `ItemData.special_effect` 字段已定义但无代码读取。设计并实现特殊效果接口：
   - 在 `ItemData` 中定义效果类型枚举：`on_kill`（击杀触发）、`on_hit`（命中触发）、`on_wave_start`（波次开始触发）、`conditional`（条件被动）、`consumable`（一次性使用）
   - 创建 `SpecialEffect` 基类 Resource，子类实现具体逻辑
   - 在 `Player` 中监听对应事件，遍历已持有道具执行特殊效果
   - 至少实现 2 个示例效果（如：医疗包 — 波次结束时恢复 20% HP；狂战士戒指 — 击杀时 +3% 伤害持续 10 秒）
-- [ ] 2. 武器替换确认对话框 — `player_weapon_slot.gd:add_weapon()` 在槽满时自动替换最低等级武器。改为发射 `weapon_replace_prompt` 信号，由 UI 层弹出确认对话框，展示新旧武器对比，玩家确认后再执行替换。或简化为：仅在购买更高等级的同类型武器时才自动替换，不同类型武器槽满时拒绝购买并提示。
-- [ ] 3. 未使用信号处理 — `EventBus.all_enemies_cleared` 和 `EventBus.pickup_collected` 已声明但从未 emit。评估是否需要：
+- [√] 2. 武器替换确认对话框 — `player_weapon_slot.gd:add_weapon()` 在槽满时自动替换最低等级武器。改为发射 `weapon_replace_prompt` 信号，由 UI 层弹出确认对话框，展示新旧武器对比，玩家确认后再执行替换。或简化为：仅在购买更高等级的同类型武器时才自动替换，不同类型武器槽满时拒绝购买并提示。
+- [√] 3. 未使用信号处理 — `EventBus.all_enemies_cleared` 和 `EventBus.pickup_collected` 已声明但从未 emit。评估是否需要：
   - `all_enemies_cleared`：当 `WaveManager` 检测到所有敌人已消灭时 emit，可用于触发特殊效果或 UI 提示
   - `pickup_collected`：当 `PickupSystem._collect()` 时 emit（携带拾取类型和数值），可用于音效和统计
   - 如确定不需要则从 `event_bus.gd` 中移除声明
-- [ ] 4. 武器合成视觉反馈 — `weapon_synthesized` 信号已 emit，HUD 刷新图标但无提示。在合成时弹出短暂文字（"合成成功！等级 +1"）或播放粒子特效，持续 1.5 秒后消失。
-- [ ] 5. HUD 武器冷却指示器 — `hud_ui.gd` 显示武器图标并在攻击时闪烁，但无冷却进度。为每个武器槽添加冷却转圈遮罩（从满到空的 radial fill），通过监听 `weapon_fired` 信号读取武器节点的 `cooldown_timer` 计算剩余冷却比例。
-- [ ] 6. 暂停菜单道具列表 — 暂停时展示当前持有的所有道具及其效果描述、堆叠数量。在 `pause_menu_ui.gd` 中遍历 `Player` 的 `stats_component.stat_modifiers` 和 `_item_stack_counts`，动态生成道具列表。
+- [√] 4. 武器合成视觉反馈 — `weapon_synthesized` 信号已 emit，HUD 刷新图标但无提示。在合成时弹出短暂文字（"合成成功！等级 +1"）或播放粒子特效，持续 1.5 秒后消失。
+- [√] 5. HUD 武器冷却指示器 — `hud_ui.gd` 显示武器图标并在攻击时闪烁，但无冷却进度。为每个武器槽添加冷却转圈遮罩（从满到空的 radial fill），通过监听 `weapon_fired` 信号读取武器节点的 `cooldown_timer` 计算剩余冷却比例。
+- [√] 6. 暂停菜单道具列表 — 暂停时展示当前持有的所有道具及其效果描述、堆叠数量。在 `pause_menu_ui.gd` 中遍历 `Player` 的 `stats_component.stat_modifiers` 和 `_item_stack_counts`，动态生成道具列表。
 
 **验证标准**：特殊效果道具正常工作；替换武器有确认流程；合成有视觉反馈；HUD 能看到冷却进度；暂停可查看道具列表。
