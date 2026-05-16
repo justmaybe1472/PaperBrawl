@@ -10,5 +10,5 @@ rarity = "common"
 base_price = 18
 max_stack = 5
 stat_modifiers = {"luck": 5}
-tags = []
+tags = ["luck"]
 description = "+5 幸运"

@@ -1,7 +1,7 @@
 # Task Phase — Potato Survivor (Godot 4.x 2D)
 
-> **版本**: 1.4 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
-> 当前阶段 Phase 7 (已完成) → 全部阶段完成
+> **版本**: 1.5 | **最后更新**: 2026-05-16 | **引擎**: Godot 4.x
+> 当前阶段 Phase 8 
 > 本文档是 AI Agent 实现游戏的开发顺序。
 
 ## 1. AI Agent 开发路线图
@@ -130,3 +130,34 @@
 - [√] 6. 暂停菜单道具列表 — 暂停时展示当前持有的所有道具及其效果描述、堆叠数量。在 `pause_menu_ui.gd` 中遍历 `Player` 的 `stats_component.stat_modifiers` 和 `_item_stack_counts`，动态生成道具列表。
 
 **验证标准**：特殊效果道具正常工作；替换武器有确认流程；合成有视觉反馈；HUD 能看到冷却进度；暂停可查看道具列表。
+
+
+#### Phase 8：角色特性与道具深度（P1/P2）
+
+目标：角色特殊规则生效、更多道具特殊效果、道具标签套装系统。
+
+**步骤：**
+- [√] 1. 角色特殊规则生效 — `CharacterData.max_hp_modifier` 和 `special_rule` 字段已定义但从未被 `Player` 或 `StatsComponent` 读取：
+  - `max_hp_modifier`：在 `StatsComponent.init_from_character()` 中将 `base_stats["max_hp"]` 乘以 `character_data.max_hp_modifier`，使 Tank（×1.5）/ Speedy（×0.75）/ Mage（×0.85）的 HP 修正生效
+  - `special_rule`：各角色有其特殊规则字符串，需在 `Player` 或 `StatsComponent` 中根据规则执行对应逻辑：
+    - `"melee_damage_bonus"`（Brawler）：近战伤害 +50%（已通过 base_stats 实现，确认是否重复）
+    - `"ranged_damage_bonus"`（Ranger）：远程伤害 +50%
+    - `"elemental_damage_bonus"`（Mage）：元素伤害 +75%
+    - `"engineering_bonus"`（Engineer）：工程 +75%
+    - `"hp_bonus"`（Tank）：HP +50%（与 max_hp_modifier 配合）
+    - `"luck_bonus"`（Lucky）：幸运 +50
+    - `"speed_bonus"`（Speedy）：速度 +50%
+  - 检查各角色 .tres 的 `base_stats` 是否已包含上述数值，若已包含则 special_rule 无需额外代码；若未包含，则需在 `init_from_character()` 中按规则追加属性
+- [√] 2. 为更多道具添加特殊效果 — 当前仅 `medkit`（波次结束回血）和 `berserker_ring`（击杀加伤害）有特殊效果。需为以下道具设计并创建特殊效果资源，至少覆盖 6 个：
+  - 建议优先级：`vampiric_fang`（击杀回血）、`ninja_suit`（闪避后加速）、`phoenix_feather`（死亡时复活一次）、`plasma_shield`（受伤后爆发伤害）、`dragon_scale`（满血时伤害加成）、`crit_gem`（暴击时穿透+1）
+  - 每个新效果需创建对应的 `SpecialEffect` .tres 文件，并更新目标道具 .tres 引用
+  - 可能需要扩展 `SpecialEffect.params` 支持新参数类型（如 `revive`、`aoe_damage`、`conditional` 等）
+  - `_exec_*` 方法中补充对应的执行逻辑
+- [√] 3. 道具标签套装系统 — `ItemData.tags` 字段已定义但所有道具均为空数组，且无代码读取：
+  - 设计标签体系（建议 6-8 个标签）：如 `fire`（火焰）、`ice`（冰霜）、`heal`（回复）、`armor`（防御）、`speed`（速度）、`crit`（暴击）、`engineering`（工程）
+  - 为现有 30+ 个道具分配 1-2 个标签
+  - 在 `Player` 中追踪各标签持有数，当同标签道具 ≥ 2/4 个时触发套装加成（如 2 件套 +10%、4 件套 +25%）
+  - 套装加成通过 `StatsComponent.add_modifier()` 以 `"tag_bonus:<tag>:<tier>"` 为来源应用，道具购买/移除时重新计算
+- [√] 4. 武器添加临时资源，用色块即可，添加武器攻击动画，近战武器有2种攻击动画：挥砍和突刺，远程射击武器只有1种攻击动画：后坐力
+
+**验证标准**：选择 Tank 时 HP 正确为 1.5 倍；不同角色有明显属性差异；6+ 个道具有可触发的特殊效果；道具标签正确显示，套装加成生效。

@@ -10,5 +10,5 @@ rarity = "uncommon"
 base_price = 30
 max_stack = 3
 stat_modifiers = {"engineering": 4}
-tags = []
+tags = ["engineering"]
 description = "+4 工程学"

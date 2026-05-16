@@ -10,5 +10,5 @@ rarity = "uncommon"
 base_price = 30
 max_stack = 3
 stat_modifiers = {"melee_damage": 3, "damage_pct": 5}
-tags = []
+tags = ["crit"]
 description = "+3 近战伤害，+5% 伤害"

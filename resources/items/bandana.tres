@@ -10,5 +10,5 @@ rarity = "common"
 base_price = 16
 max_stack = 3
 stat_modifiers = {"speed": 5, "dodge": 2}
-tags = []
+tags = ["speed"]
 description = "+5% 移动速度，+2% 闪避率"

@@ -10,5 +10,5 @@ rarity = "uncommon"
 base_price = 32
 max_stack = 3
 stat_modifiers = {"ranged_damage": 3, "range": 20}
-tags = []
+tags = ["crit"]
 description = "+3 远程伤害，+20 范围"

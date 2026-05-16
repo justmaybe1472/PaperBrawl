@@ -10,5 +10,5 @@ rarity = "common"
 base_price = 20
 max_stack = 5
 stat_modifiers = {"range": 15}
-tags = []
+tags = ["crit"]
 description = "+15 攻击范围"

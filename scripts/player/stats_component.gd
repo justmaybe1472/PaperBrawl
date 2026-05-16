@@ -15,6 +15,9 @@ var regen_accumulator: float = 0.0
 func init_from_character(character_data: CharacterData):
 	# 深拷贝避免修改 CharacterData 源数据，各角色实例独立
 	base_stats = character_data.base_stats.duplicate(true)
+	# 应用角色 max_hp_modifier（Tank x1.5 / Speedy x0.75 / Mage x0.85）
+	if character_data.max_hp_modifier != 1.0:
+		base_stats["max_hp"] = round(base_stats["max_hp"] * character_data.max_hp_modifier)
 	current_stats = base_stats.duplicate(true)
 	stat_modifiers.clear()
 	hp = int(get_stat("max_hp"))  # 初始血量设为最大 HP

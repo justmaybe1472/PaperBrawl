@@ -2,12 +2,15 @@
 extends WeaponBase
 class_name WeaponRanged
 
+# 武器精灵引用，用于播放后坐力动画
+var weapon_sprite: Sprite2D
+
 func _create_visual():
-	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_1.png", 32.0)
+	weapon_sprite = Sprite2D.new()
+	PlaceholderSprites.apply_test_texture(weapon_sprite, "Weapon_1.png", 32.0)
 	# 远程武器放置在玩家前方偏上，视觉上区分于近战武器
-	sprite.position = Vector2(25, -8)
-	add_child(sprite)
+	weapon_sprite.position = Vector2(25, -8)
+	add_child(weapon_sprite)
 
 func attack():
 	# 防御性获取玩家属性引用——对象池复用场景可能导致引用丢失
@@ -30,6 +33,19 @@ func attack():
 		_spawn_projectile(center_pos, dir)
 
 	EventBus.weapon_fired.emit(weapon_id, global_position, target_dir)
+	# 播放后坐力动画
+	_play_recoil_animation()
+
+# 后坐力动画：武器精灵向后短暂位移再归位（模拟射击反冲）
+func _play_recoil_animation():
+	if weapon_sprite == null:
+		return
+	var start_pos = weapon_sprite.position
+	var tween = create_tween()
+	# 沿武器本地X轴负方向后退5像素
+	tween.tween_property(weapon_sprite, "position:x", start_pos.x - 6, 0.04)
+	# 稍慢归位
+	tween.tween_property(weapon_sprite, "position:x", start_pos.x, 0.08)
 
 func _get_target_direction() -> Vector2:
 	# 优先朝向最近的敌人

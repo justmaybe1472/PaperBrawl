@@ -92,6 +92,13 @@
 - **修复**：返回类型改为基类 `Texture2D`
 - **预防**：`load()` 加载外部图片资源时，返回类型应声明为 `Texture2D`；`ImageTexture` 仅适用于代码生成的纹理
 
+### [2026-05-16] `max_hp_modifier` 字段已定义但代码未读取
+- **场景**：Phase 8 实现角色特殊规则时发现 `CharacterData.max_hp_modifier` 在 .tres 中已定义（Tank=1.5, Speedy=0.75, Mage=0.85），但 `StatsComponent.init_from_character()` 从未读取此字段
+- **错误**：Tank 的 HP 应为 18×1.5=27，实际只有 18；Speedy 应为 9×0.75≈7，实际为 9
+- **根因**：Resource 类新增字段后未同步更新所有读取该 Resource 的代码路径
+- **修复**：在 `init_from_character()` 中 `base_stats` 拷贝后立即应用 `max_hp_modifier` 乘法修正
+- **预防**：Resource 类每次新增字段后，`grep` 搜索所有引用该 Resource 的脚本，确认新字段已被读取
+
 ## 常见防空指南（给玩家/开发者）
 
 以下是在 Brotato-like 游戏中 AI 容易犯的**系统级错误**，提前列出防患于未然：

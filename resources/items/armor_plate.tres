@@ -10,5 +10,5 @@ rarity = "common"
 base_price = 18
 max_stack = 5
 stat_modifiers = {"armor": 2}
-tags = []
+tags = ["armor"]
 description = "+2 护甲"

@@ -11,6 +11,6 @@ rarity = "common"
 base_price = 1
 max_stack = 3
 stat_modifiers = {"max_hp": 3, "hp_regen": 1}
-tags = []
+tags = ["heal"]
 description = "+3 最大生命值，每秒回复 +1 HP，波次结束时回复 20% HP"
 special_effect = ExtResource("2_eff")

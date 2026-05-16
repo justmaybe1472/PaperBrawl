@@ -10,5 +10,5 @@ rarity = "rare"
 base_price = 65
 max_stack = 2
 stat_modifiers = {"max_hp": 10, "hp_regen": 3}
-tags = []
+tags = ["heal"]
 description = "+10 最大生命值，+3 生命再生"

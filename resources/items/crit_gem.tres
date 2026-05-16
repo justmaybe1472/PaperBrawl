@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+[ext_resource type="Resource" path="res://resources/items/effects/on_hit_crit_buff.tres" id="2_eff"]
 
 [resource]
 script = ExtResource("1_itm")
@@ -10,5 +11,6 @@ rarity = "uncommon"
 base_price = 35
 max_stack = 5
 stat_modifiers = {"crit_chance": 5}
-tags = []
-description = "+5% 暴击率"
+tags = ["crit", "luck"]
+description = "+5% 暴击率，造成伤害时 +4% 暴击率持续 5 秒（可堆叠）"
+special_effect = ExtResource("2_eff")

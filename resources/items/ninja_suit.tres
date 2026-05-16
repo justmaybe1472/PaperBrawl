@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+[ext_resource type="Resource" path="res://resources/items/effects/on_kill_speed_buff.tres" id="2_eff"]
 
 [resource]
 script = ExtResource("1_itm")
@@ -10,5 +11,6 @@ rarity = "rare"
 base_price = 55
 max_stack = 2
 stat_modifiers = {"dodge": 5, "speed": 10}
-tags = []
-description = "+5% 闪避率，+10% 速度"
+tags = ["speed", "armor"]
+description = "+5% 闪避率，+10% 速度，击杀时 +15% 速度持续 5 秒"
+special_effect = ExtResource("2_eff")

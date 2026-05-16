@@ -10,5 +10,5 @@ rarity = "uncommon"
 base_price = 28
 max_stack = 3
 stat_modifiers = {"max_hp": 5, "life_steal": 2}
-tags = []
+tags = ["heal"]
 description = "+5 最大生命值，+2% 生命偷取"

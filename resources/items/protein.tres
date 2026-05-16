@@ -10,5 +10,5 @@ rarity = "common"
 base_price = 20
 max_stack = 5
 stat_modifiers = {"damage_pct": 5}
-tags = []
+tags = ["crit"]
 description = "+5% 伤害"

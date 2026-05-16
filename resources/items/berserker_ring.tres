@@ -11,6 +11,6 @@ rarity = "rare"
 base_price = 60
 max_stack = 2
 stat_modifiers = {"attack_speed": 15, "crit_chance": 3}
-tags = []
+tags = ["speed", "crit"]
 description = "+15% 攻速，+3% 暴击率，击杀时 +3% 伤害持续 10 秒"
 special_effect = ExtResource("2_eff")

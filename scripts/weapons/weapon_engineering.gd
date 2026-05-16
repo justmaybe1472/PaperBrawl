@@ -9,12 +9,15 @@ var deployed_nodes: Array = []
 const TURRET_SCRIPT = preload("res://scripts/projectiles/turret_deploy.gd")
 const MINE_SCRIPT = preload("res://scripts/projectiles/mine_deploy.gd")
 
+# 武器精灵引用，用于播放部署动画
+var weapon_sprite: Sprite2D
+
 func _create_visual():
-	var sprite = Sprite2D.new()
-	PlaceholderSprites.apply_test_texture(sprite, "Weapon_4.png", 28.0)
+	weapon_sprite = Sprite2D.new()
+	PlaceholderSprites.apply_test_texture(weapon_sprite, "Weapon_4.png", 28.0)
 	# 工程武器放置在玩家左侧，与其他武器方向区分（近战右上、远程左上、元素左下）
-	sprite.position = Vector2(-25, 0)
-	add_child(sprite)
+	weapon_sprite.position = Vector2(-25, 0)
+	add_child(weapon_sprite)
 
 func attack():
 	# 获取玩家位置以在周围随机部署构造物
@@ -32,8 +35,19 @@ func attack():
 		_deploy_turret(player.global_position)
 
 	EventBus.weapon_fired.emit(weapon_id, global_position, Vector2.ZERO)
+	# 播放部署动画（武器精灵缩放脉冲）
+	_play_deploy_animation()
 	# 每次攻击后清理已销毁的构造物引用，防止数组无限增长
 	_cleanup_dead()
+
+# 部署动画：武器精灵短暂缩放脉冲（模拟"放置"动作）
+func _play_deploy_animation():
+	if weapon_sprite == null:
+		return
+	var tween = create_tween()
+	# 先缩小到80%再弹回100%
+	tween.tween_property(weapon_sprite, "scale", Vector2(0.8, 0.8), 0.08)
+	tween.tween_property(weapon_sprite, "scale", Vector2(1.0, 1.0), 0.12)
 
 func _deploy_turret(pos: Vector2):
 	var turret = Area2D.new()
@@ -65,6 +79,8 @@ func _deploy_turret(pos: Vector2):
 	# 添加到场景根节点使炮台独立于武器运行
 	get_tree().root.add_child(turret)
 	deployed_nodes.append(turret)
+	# 部署动画：从0缩放到1（弹出效果）
+	_animate_deployed_entity(sprite)
 
 func _deploy_mine(pos: Vector2):
 	var mine = Area2D.new()
@@ -92,6 +108,16 @@ func _deploy_mine(pos: Vector2):
 	# 添加到场景根节点使地雷独立于武器运行
 	get_tree().root.add_child(mine)
 	deployed_nodes.append(mine)
+	# 部署动画：从0缩放到1（弹出效果）
+	_animate_deployed_entity(sprite)
+
+# 部署实体的弹出动画：从0缩放到1（约0.15秒）
+func _animate_deployed_entity(entity_sprite: Sprite2D):
+	if entity_sprite == null:
+		return
+	entity_sprite.scale = Vector2(0.01, 0.01)
+	var tween = entity_sprite.create_tween()
+	tween.tween_property(entity_sprite, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 func _cleanup_dead():
 	# 从后往前遍历删除无效节点引用，防止移除元素时索引错乱

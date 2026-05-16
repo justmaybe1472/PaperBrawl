@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/item_data.gd" id="1_itm"]
+[ext_resource type="Resource" path="res://resources/items/effects/consumable_revive.tres" id="2_eff"]
 
 [resource]
 script = ExtResource("1_itm")
@@ -10,5 +11,6 @@ rarity = "legendary"
 base_price = 110
 max_stack = 1
 stat_modifiers = {"max_hp": 8, "hp_regen": 5, "life_steal": 3}
-tags = []
-description = "+8 最大生命值，+5 生命再生，+3% 生命偷取"
+tags = ["heal", "fire"]
+description = "+8 最大生命值，+5 生命再生，+3% 生命偷取，死亡时复活一次（恢复50% HP）"
+special_effect = ExtResource("2_eff")

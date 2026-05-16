@@ -10,5 +10,5 @@ rarity = "uncommon"
 base_price = 35
 max_stack = 3
 stat_modifiers = {"elemental_damage": 4}
-tags = []
+tags = ["fire"]
 description = "+4 元素伤害"
